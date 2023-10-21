@@ -6,10 +6,14 @@ import webbrowser
 from selenium import webdriver
 from PyQt5 import uic
 from NaverIDCollectfile import NaverIdCollectClass
+from NaverLogin import NaverLoginClass
 from PyQt5.QtCore import *
 from FriendAdd import FriendAddClass
 import MainUi
 import LoginUi
+"""
+환경: python 3.9.16 my_proj:conda
+"""
 app = QApplication(sys.argv)
 
 form_class = uic.loadUiType("LoginUi.ui")[0]
@@ -60,6 +64,7 @@ class MyWindow(QMainWindow, LoginUi.Ui_Dialog):
     def manul_link(self):
         url = r"https://cafe.naver.com/onetouchsolution" 
         webbrowser.open(url)
+
 class SecondWindow(QMainWindow, form_class_1):
     def __init__(self):
         super().__init__()
@@ -68,7 +73,8 @@ class SecondWindow(QMainWindow, form_class_1):
         self.setupUi(self)
         self.KeyWordList= self.KeyWord.text()
         self.IdCollectBtn.clicked.connect(self.StartCollect)
-        self.AddFriendBtn.clicked.connect(self.FriendAddFun)
+        self.AddFriendBtn.clicked.connect(self.FriendAdd)
+
     def StartCollect(self):
         try:
             print("SecondWindow->StartCollec 함수 호출")
@@ -84,9 +90,13 @@ class SecondWindow(QMainWindow, form_class_1):
         except Exception as e:
             print("SecondWindow->StartCollec 함수 에러: "+e)
 
-    def FriendAddFun(self):
-        FriendMacro = FriendAddClass(self.driver, self.MacroCollect.IdList, self.Id.text(), self.Pw.text(), self.CollectStatus2)
-        FriendMacro.run()
+    def FriendAdd(self):
+        NaverLogin = NaverLoginClass(self.driver,self.Id.text(), self.Pw.text())
+        NaverLoginReturn = NaverLogin.run()
+        if NaverLoginReturn == 1:
+            FriendMacro = FriendAddClass(self.driver, self.MacroCollect.IdList,  self.CollectStatus2)
+            FriendMacro.run()
+
 if __name__ == "__main__":
     myWindow = MyWindow()
     myWindow.show()

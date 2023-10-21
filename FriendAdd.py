@@ -1,7 +1,6 @@
 import random
 
 import pyperclip
-from selenium.common import ElementNotInteractableException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from PyQt5.QtCore import *
@@ -13,27 +12,16 @@ from PyQt5.QtCore import QThread
 
 
 class FriendAddClass(QThread):
-    def __init__(self, driver, IdList, Id, Pw, CollectStatus2):
+    def __init__(self, driver, IdList, CollectStatus2):
         super().__init__()
         self.driver = driver
         self.IdList = IdList
-        self.Id = Id
-        self.Pw = Pw
         self.CollectStatus2 = CollectStatus2
 
     def run(self):
         processed_ids = []
         cnt = 1
         random_number = random.randint(1, 13)
-
-        url = 'https://nid.naver.com/nidlogin.login?mode=form&url=https://www.naver.com/'
-        self.driver.get(url)
-        pyperclip.copy(self.Id)
-        self.driver.find_element(By.ID, 'id').send_keys(Keys.CONTROL, 'V')
-        pyperclip.copy(self.Pw)
-        self.driver.find_element(By.ID, 'pw').send_keys(Keys.CONTROL, 'V')
-        self.driver.find_element(By.XPATH, '//*[@id="log.login"]/span').click()
-
         for id in self.IdList:
             id = id.replace('\n', '')
             url = f'https://m.blog.naver.com/BuddyAddForm.naver?blogId={id}&returnUrl=https%253A%252F%252Fm.blog.naver.com%252F{id}'
@@ -67,13 +55,6 @@ class FriendAddClass(QThread):
                     print('오늘 자 서로이웃 완료')
                     break
                 cnt += 1
-
-            except NoSuchElementException as f:
-                print(f'{f}')
-                continue
-
-            except ElementNotInteractableException:
-                continue
             except:
                 try:
                     text = self.driver.find_element(By.CSS_SELECTOR, '.txt_area.dsc').text

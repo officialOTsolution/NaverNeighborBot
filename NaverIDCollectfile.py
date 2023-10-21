@@ -12,6 +12,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 from datetime import datetime
 from PyQt5.QtCore import *
+
 class NaverIdCollectClass(QThread):
     def __init__(self, driver, Keyward, Count, CollectStatus, Rest):
         super().__init__()
@@ -37,12 +38,12 @@ class NaverIdCollectClass(QThread):
                 for _ in range(10):
                     self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                     time.sleep(1)
-
-                eles = self.driver.find_elements(By.CSS_SELECTOR, '.sub_txt.sub_name')
+                eles = self.driver.find_elements(By.CSS_SELECTOR, '.user_info')
                 scroll_bar =self.CollectStatus.verticalScrollBar()
 
                 for ele in eles:
-                    href = ele.get_attribute('href')
+                    a_tag = ele.find_element(By.CSS_SELECTOR, 'a')
+                    href = a_tag.get_attribute('href')
                     href = href.replace('https://blog.naver.com/', '')
                     self.IdList.append(href)
                     counting += 1

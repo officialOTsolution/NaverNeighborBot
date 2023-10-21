@@ -7,23 +7,34 @@
     <x>0</x>
     <y>0</y>
     <width>457</width>
-    <height>610</height>
+    <height>543</height>
    </rect>
   </property>
   <property name="font">
    <font>
-    <weight>75</weight>
-    <bold>true</bold>
+    <family>Adobe Devanagari</family>
+    <weight>50</weight>
+    <bold>false</bold>
    </font>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>서이추 봇</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255,255,255);
+border-radius: 100px;</string>
+  </property>
+  <property name="locale">
+   <locale language="Korean" country="SouthKorea"/>
   </property>
   <widget class="QPushButton" name="StartBtn">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>460</y>
+     <x>80</x>
+     <y>340</y>
      <width>311</width>
      <height>51</height>
     </rect>
@@ -47,8 +58,8 @@
   <widget class="QLineEdit" name="ID">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>340</y>
+     <x>220</x>
+     <y>230</y>
      <width>171</width>
      <height>31</height>
     </rect>
@@ -58,13 +69,16 @@
      <family>Agency FB</family>
      <pointsize>12</pointsize>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border: 1px solid black;</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="PW">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>390</y>
+     <x>220</x>
+     <y>280</y>
      <width>171</width>
      <height>31</height>
     </rect>
@@ -75,14 +89,20 @@
      <pointsize>12</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border: 1px solid black;</string>
+   </property>
+   <property name="echoMode">
+    <enum>QLineEdit::Password</enum>
+   </property>
   </widget>
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>340</y>
-     <width>81</width>
-     <height>31</height>
+     <x>80</x>
+     <y>230</y>
+     <width>111</width>
+     <height>29</height>
     </rect>
    </property>
    <property name="font">
@@ -92,14 +112,14 @@
     </font>
    </property>
    <property name="text">
-    <string>아이디</string>
+    <string>아이디:</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>390</y>
+     <x>80</x>
+     <y>280</y>
      <width>121</width>
      <height>41</height>
     </rect>
@@ -114,28 +134,74 @@
     <string>비밀번호</string>
    </property>
   </widget>
-  <widget class="QLabel" name="LoginResult">
+  <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>440</y>
-     <width>261</width>
-     <height>16</height>
+     <x>0</x>
+     <y>-20</y>
+     <width>171</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/logo/one_touch_solutions_logo2.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>90</y>
+     <width>291</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>Agency FB</family>
-     <pointsize>7</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
+     <family>Adobe Devanagari</family>
+     <pointsize>20</pointsize>
+     <italic>true</italic>
     </font>
    </property>
    <property name="text">
-    <string/>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;서로 이웃 요청 자동화 봇&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="HowToUse">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>400</y>
+     <width>151</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: #a0a0a0;</string>
+   </property>
+   <property name="text">
+    <string>사용 방법</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="InstaLInk">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>400</y>
+     <width>141</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: #a0a0a0;</string>
+   </property>
+   <property name="text">
+    <string>개발자 인스타</string>
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../서이추봇gui버전/logo.qrc"/>
+ </resources>
  <connections/>
 </ui>

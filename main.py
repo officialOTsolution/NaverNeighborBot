@@ -71,19 +71,18 @@ class SecondWindow(QMainWindow, form_class_1):
         self.AddFriendBtn.clicked.connect(self.FriendAddFun)
     def StartCollect(self):
         try:
+            print("SecondWindow->StartCollec 함수 호출")
             print(self.KeyWordList, self)
             time.sleep(1)
             self.KeyWordList= self.KeyWord.text()
             self.KeyWordList = [self.KeyWordList]
             self.MacroCollect = NaverIdCollectClass(self.driver, self.KeyWordList, int(self.Count.text()), self.CollectStatus, self.Rest)
             self.MacroCollect.start()
-            
             print(self.MacroCollect.Count, self.MacroCollect.Keyward)
             time.sleep(2)
-
-            print("hererere")
+            print("SecondWindow->MacroCollect.start() 함수 종료")
         except Exception as e:
-            print(e)
+            print("SecondWindow->StartCollec 함수 에러: "+e)
 
     def FriendAddFun(self):
         FriendMacro = FriendAddClass(self.driver, self.MacroCollect.IdList, self.Id.text(), self.Pw.text(), self.CollectStatus2)

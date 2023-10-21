@@ -26,7 +26,7 @@ class NaverIdCollectClass(QThread):
 
     def run(self):
         try:
-            print("herlelel")
+            print("NaverIdCollectClass->run 호출")
             time.sleep(3)
             counting = 0
             time.sleep(1)
@@ -35,7 +35,7 @@ class NaverIdCollectClass(QThread):
                 url = f'https://search.naver.com/search.naver?where=blog&query={keyward}&sm=tab_opt&nso=so%3Add%2Cp%3Aall'
                 self.driver.get(url)
                 # 맨 밑 페이지로 이동.
-                for _ in range(10):
+                for _ in range(self.Count):
                     self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                     time.sleep(1)
                 eles = self.driver.find_elements(By.CSS_SELECTOR, '.user_info')
@@ -56,37 +56,10 @@ class NaverIdCollectClass(QThread):
             self.Rest.setText(str(len(self.IdList)))
 
         except Exception as e:
-            print("here", e)
+            print("run 함수 에러 발생:", e)
 
     def resume(self):
         self.running = True
 
     def pause(self):
         self.running = False
-
-    def NaverIdCollect(self):
-        try:
-            counting = 0
-            time.sleep(1)
-            for keyward in self.Keyward:
-                print(keyward)
-                url = f'https://search.naver.com/search.naver?where=blog&query={keyward}&sm=tab_opt&nso=so%3Add%2Cp%3Aall'
-                self.driver.get(url)
-                # 맨 밑 페이지로 이동.
-                for _ in range(10):
-                    self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                    time.sleep(1)
-
-                eles = self.driver.find_elements(By.CSS_SELECTOR, '.sub_txt.sub_name')
-                for ele in eles:
-                    href = ele.get_attribute('href')
-                    href = href.replace('https://blog.naver.com/', '')
-                    self.IdList.append(href)
-                    counting += 1
-                    self.CollectStatus.append(f'현재 수집된 아이디 개수 : {counting}')
-                if len(self.IdList) >= self.Count:
-                    break
-            # 중복제거
-            self.IdList = list(set(self.IdList))
-        except Exception as e:
-            print('hekrekrh' , e)

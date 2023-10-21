@@ -2,7 +2,7 @@ import time
 import math
 import sys
 from PyQt5.QtWidgets import *
-
+import webbrowser
 from selenium import webdriver
 from PyQt5 import uic
 from NaverIDCollectfile import NaverIdCollectClass
@@ -24,6 +24,8 @@ class MyWindow(QMainWindow, LoginUi.Ui_Dialog):
         self.selen = None
         self.setupUi(self)
         self.StartBtn.clicked.connect(self.resume)
+        self.HowToUse.clicked.connect(self.manul_link)
+        self.InstaLInk.clicked.connect(self.insta_link)
 
     def resume(self):
         LoginInfor = self.Login()
@@ -33,7 +35,7 @@ class MyWindow(QMainWindow, LoginUi.Ui_Dialog):
             self.selen = SecondWindow()
             self.selen.show()
         else:
-            self.LoginResult.setText('아이디 혹은 비밀번호가 잘못되었습니다.')
+            self.show_alert('로그인 실패 \n아이디와 패스워드를 다시 입력해주세요.')
 
     def pause(self):
         self.selen.pause()
@@ -51,6 +53,13 @@ class MyWindow(QMainWindow, LoginUi.Ui_Dialog):
         alert.setStandardButtons(QMessageBox.Ok)
         alert.exec_()
 
+    def insta_link(self):
+        url = r"https://www.instagram.com/onetouch_sol/" 
+        webbrowser.open(url)
+    
+    def manul_link(self):
+        url = r"https://cafe.naver.com/onetouchsolution" 
+        webbrowser.open(url)
 class SecondWindow(QMainWindow, form_class_1):
     def __init__(self):
         super().__init__()
@@ -65,15 +74,10 @@ class SecondWindow(QMainWindow, form_class_1):
             print(self.KeyWordList, self)
             time.sleep(1)
             self.KeyWordList= self.KeyWord.text()
-            if ',' in self.KeyWordList:
-                self.KeyWordList = self.KeyWordList.split(',')
-            else:
-                self.KeyWordList = [self.KeyWordList]
-            print('123123')
+            self.KeyWordList = [self.KeyWordList]
             self.MacroCollect = NaverIdCollectClass(self.driver, self.KeyWordList, int(self.Count.text()), self.CollectStatus, self.Rest)
             self.MacroCollect.start()
-
-            print('1231233')
+            
             print(self.MacroCollect.Count, self.MacroCollect.Keyward)
             time.sleep(2)
 

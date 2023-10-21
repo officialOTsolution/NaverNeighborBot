@@ -71,6 +71,7 @@ class SecondWindow(QMainWindow, form_class_1):
         self.driver = webdriver.Chrome()
         self.MacroCollect = None
         self.setupUi(self)
+        self.flag = False #IdCollectBtn을 클릭해야만 AddFriendBtn 활성화
         self.KeyWordList= self.KeyWord.text()
         self.IdCollectBtn.clicked.connect(self.StartCollect)
         self.AddFriendBtn.clicked.connect(self.FriendAdd)
@@ -78,6 +79,7 @@ class SecondWindow(QMainWindow, form_class_1):
     def StartCollect(self):
         try:
             print("SecondWindow->StartCollec 함수 호출")
+            self.flag = True
             print(self.KeyWordList, self)
             time.sleep(1)
             self.KeyWordList= self.KeyWord.text()
@@ -91,11 +93,22 @@ class SecondWindow(QMainWindow, form_class_1):
             print("SecondWindow->StartCollec 함수 에러: "+e)
 
     def FriendAdd(self):
-        NaverLogin = NaverLoginClass(self.driver,self.Id.text(), self.Pw.text())
-        NaverLoginReturn = NaverLogin.run()
-        if NaverLoginReturn == 1:
-            FriendMacro = FriendAddClass(self.driver, self.MacroCollect.IdList,  self.CollectStatus2)
-            FriendMacro.run()
+        if self.flag:
+            NaverLogin = NaverLoginClass(self.driver,self.Id.text(), self.Pw.text())
+            NaverLoginReturn = NaverLogin.run()
+            if NaverLoginReturn == 1:
+                FriendMacro = FriendAddClass(self.driver, self.MacroCollect.IdList,  self.CollectStatus2)
+                FriendMacro.run()
+        else:
+            self.show_alert('아이디 수집을 먼저 진행해주세요.')
+    
+    def show_alert(self, text):
+        alert = QMessageBox()
+        alert.setWindowTitle("알림")
+        alert.setText(text)
+        alert.setIcon(QMessageBox.Information)
+        alert.setStandardButtons(QMessageBox.Ok)
+        alert.exec_()
 
 if __name__ == "__main__":
     myWindow = MyWindow()

@@ -9,6 +9,7 @@ from NaverIDCollectfile import NaverIdCollectClass
 from NaverLogin import NaverLoginClass
 from PyQt5.QtCore import *
 from FriendAdd import FriendAddClass
+import threading
 import MainUi
 import LoginUi
 """
@@ -75,7 +76,9 @@ class SecondWindow(QMainWindow, form_class_1):
         self.KeyWordList= self.KeyWord.text()
         self.message = self.message.text()
         self.IdCollectBtn.clicked.connect(self.StartCollect)
-        self.AddFriendBtn.clicked.connect(self.FriendAdd)
+        self.AddFriendBtn.clicked.connect(self.NaverLog)
+        self.worker_thread = None
+        
 
     def StartCollect(self):
         try:
@@ -92,27 +95,26 @@ class SecondWindow(QMainWindow, form_class_1):
             print("SecondWindow->MacroCollect.start() 함수 종료")
         except Exception as e:
             print("SecondWindow->StartCollec 함수 에러: "+e)
-    def FriendAdd(self):
-        if self.flag:
-            if self.Id.text() != "" and self.Pw.text() != "":
-                NaverLogin = NaverLoginClass(self.driver,self.Id.text(), self.Pw.text())
-                NaverLoginReturn = NaverLogin.run()
-                if NaverLoginReturn == 1:
-                    FriendMacro = FriendAddClass(self.driver, self.MacroCollect.IdList,self.CollectStatus2, self.message)
-                    FriendMacro.run()
-            else:
-                self.show_alert('네이버 아이디 혹은 비밀번호를 입력해주세요')
-        else:
-            self.show_alert('아이디 수집을 먼저 진행해주세요.')
+    def startFriendAdd(self):
+        self.friend_thread = FriendAddClass(self.driver,self.MacroCollect.IdList,  self.CollectStatus2)
+        self.friend_thread.update_signal.connect(self.update_gui)
+        self.friend_thread.start()
+        # self.FriendMacro = FriendAddClass(self.driver, self.MacroCollect.IdList,  self.CollectStatus2)
+        # self.worker_thread = threading.Thread(target=self.FriendMacro.run())
+        # self.worker_thread.start()
+    def update_gui(self, message):
+        self.CollectStatus2.append(message)
+    def NaverLog(self):
+        NaverLogin = NaverLoginClass(self.driver,self.Id.text(), self.Pw.text())
+        NaverLoginReturn = NaverLogin.run()
+        if NaverLoginReturn == 1:
+            self.startFriendAdd()
 
-    def show_alert(self, text):
-        alert = QMessageBox()
-        alert.setWindowTitle("알림")
-        alert.setText(text)
-        alert.setIcon(QMessageBox.Information)
-        alert.setStandardButtons(QMessageBox.Ok)
-        alert.exec_()
 
+    # def FriendAdd(self):
+    #     FriendMacro = FriendAddClass(self.driver, self.MacroCollect.IdList,  self.CollectStatus2)
+    #     FriendMacro.run()
+        
 if __name__ == "__main__":
     myWindow = MyWindow()
     myWindow.show()

@@ -61,5 +61,8 @@ class FriendAddClass(QThread):
                 self.update_signal.emit(f"보낸 서이 요청 수: {cnt}개")
                 
                 cnt += 1
+            except WebDriverException:
+                self.driver = webdriver.Chrome() 
+                self.run()
             except:
                 continue

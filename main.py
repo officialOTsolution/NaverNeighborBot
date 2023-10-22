@@ -86,8 +86,10 @@ class SecondWindow(QMainWindow, form_class_1):
             else:
                 self.show_alert("키워드를 입력해주세요.")
         except Exception as e:
-            print("SecondWindow->StartCollect 함수 에러: "+e)
-    
+            print("SecondWindow->StartCollect 함수 에러: "+str(e))
+            self.show_alert("개수를 입력해주세요.")
+        
+
     def NaverLog(self):
         if self.flag:
             if self.Id.text() != "" and self.Pw.text() != "":

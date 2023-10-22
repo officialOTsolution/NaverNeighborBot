@@ -55,8 +55,9 @@ class NaverIdCollectClass(QThread):
             self.IdList = list(set(self.IdList))
             self.Rest.setText(str(len(self.IdList)))
         except Exception as e:
-            print("run 함수 에러 발생:", e)
-
+            print("run 함수 에러 발생:" + str(e))
+            self.driver = webdriver.Chrome() 
+            self.run()
     def resume(self):
         self.running = True
 

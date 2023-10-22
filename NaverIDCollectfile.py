@@ -14,7 +14,7 @@ from datetime import datetime
 from PyQt5.QtCore import *
 
 class NaverIdCollectClass(QThread):
-    def __init__(self, driver, Keyward, Count, CollectStatus, Rest):
+    def __init__(self, driver, Keyward, CollectStatus, Rest, Count =1):
         super().__init__()
         self.driver = driver
         self.Keyward = Keyward

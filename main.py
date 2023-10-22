@@ -75,15 +75,18 @@ class SecondWindow(QMainWindow, form_class_1):
             self.flag = True 
             print(self.KeyWordList, self)
             time.sleep(1)
-            self.KeyWordList= self.KeyWord.text()
-            self.KeyWordList = [self.KeyWordList]
-            self.MacroCollect = NaverIdCollectClass(self.driver, self.KeyWordList, int(self.Count.text()), self.CollectStatus, self.Rest)
-            self.MacroCollect.start()
-            print(self.MacroCollect.Count, self.MacroCollect.Keyward)
-            time.sleep(2)
-            print("SecondWindow->MacroCollect.start() 함수 종료\n")
+            if self.KeyWord.text() != "":
+                self.KeyWordList= self.KeyWord.text()
+                self.KeyWordList = [self.KeyWordList]
+                self.MacroCollect = NaverIdCollectClass(self.driver, self.KeyWordList, self.CollectStatus, self.Rest, int(self.Count.text()))
+                self.MacroCollect.start()
+                print(self.MacroCollect.Count, self.MacroCollect.Keyward)
+                time.sleep(2)
+                print("SecondWindow->MacroCollect.start() 함수 종료\n")
+            else:
+                self.show_alert("키워드를 입력해주세요.")
         except Exception as e:
-            print("SecondWindow->StartCollec 함수 에러: "+e)
+            print("SecondWindow->StartCollect 함수 에러: "+e)
     
     def NaverLog(self):
         if self.flag:

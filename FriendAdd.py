@@ -8,6 +8,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 from datetime import datetime
 from PyQt5.QtCore import QThread, pyqtSignal
+from selenium.common.exceptions import *
 
 class FriendAddClass(QThread):
     update_signal = pyqtSignal(str)  # Define a signal to send updates
@@ -28,7 +29,14 @@ class FriendAddClass(QThread):
             try:
                 self.driver.get(url)
                 # 서로이웃버튼 클릭
-                time.sleep(0.5)
+                try:
+                    text = self.driver.find_element(By.CSS_SELECTOR, '#lyr6 > div > div.txt_area > p').text
+                    if text == '하루에 신청 가능한 이웃수가 초과되어 더이상 이웃을 추가할 수 없습니다.':
+                        self.update_signal.emit(f"오늘 자 서로이웃 완료")
+                        self.driver.quit()
+                        break
+                except NoSuchElementException:
+                    continue
                 button = self.driver.find_element(By.CSS_SELECTOR, '#bothBuddyRadio')
                 button.click()
                 self.driver.implicitly_wait(2)
@@ -49,27 +57,9 @@ class FriendAddClass(QThread):
                 button = self.driver.find_element(By.CSS_SELECTOR, 'body > ui-view > div.head.type1 > a.btn_ok')
                 button.click()
                 self.driver.implicitly_wait(0.5)
-
+                time.sleep(100)
                 self.update_signal.emit(f"보낸 서이 요청 수: {cnt}개")
-                if cnt == 100:
-                    print('오늘 자 서로이웃 완료')
-                    break
+                
                 cnt += 1
             except:
-                try:
-                    text = self.driver.find_element(By.CSS_SELECTOR, '.txt_area.dsc').text
-                    if text == '하루에 신청 가능한 이웃수가 초과되어 더이상 이웃을 추가할 수 없습니다.':
-                        print('오늘 자 서로이웃 완료')
-                        break
-                except:
-                    continue
-
                 continue
-            processed_ids.append(id)
-        ids = [id for id in self.IdList if id not in processed_ids]
-
-    def resume(self):
-        self.running = True
-
-    def pause(self):
-        self.running = False

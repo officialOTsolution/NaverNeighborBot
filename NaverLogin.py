@@ -9,7 +9,7 @@ import time
 from datetime import datetime
 from PyQt5.QtCore import QThread
 class NaverLoginClass(QThread):
-    def __init__(self,driver, Id, Pw):
+    def __init__(self,driver, Id="", Pw=""):
         super().__init__()
         self.driver = driver
         self.Id = Id

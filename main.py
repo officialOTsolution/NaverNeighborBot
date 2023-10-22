@@ -72,9 +72,7 @@ class SecondWindow(QMainWindow, form_class_1):
         self.driver = webdriver.Chrome()
         self.MacroCollect = None
         self.setupUi(self)
-        self.flag = False #IdCollectBtn을 클릭해야만 AddFriendBtn 활성화
         self.KeyWordList= self.KeyWord.text()
-        self.message = self.message.text()
         self.IdCollectBtn.clicked.connect(self.StartCollect)
         self.AddFriendBtn.clicked.connect(self.NaverLog)
         self.worker_thread = None
@@ -83,7 +81,6 @@ class SecondWindow(QMainWindow, form_class_1):
     def StartCollect(self):
         try:
             print("SecondWindow->StartCollec 함수 호출")
-            self.flag = True
             print(self.KeyWordList, self)
             time.sleep(1)
             self.KeyWordList= self.KeyWord.text()
@@ -109,7 +106,6 @@ class SecondWindow(QMainWindow, form_class_1):
         NaverLoginReturn = NaverLogin.run()
         if NaverLoginReturn == 1:
             self.startFriendAdd()
-
 
     # def FriendAdd(self):
     #     FriendMacro = FriendAddClass(self.driver, self.MacroCollect.IdList,  self.CollectStatus2)

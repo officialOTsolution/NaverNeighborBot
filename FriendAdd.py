@@ -17,8 +17,6 @@ class FriendAddClass(QThread):
         self.driver = driver
         self.IdList = IdList
 
-
-
     def run(self):
         processed_ids = []
         cnt = 1
@@ -44,14 +42,12 @@ class FriendAddClass(QThread):
                 self.driver.implicitly_wait(0.5)
                 message = self.driver.find_element(By.CSS_SELECTOR,
                                               '#buddyAddForm > fieldset > div > div.set_detail_t1 > div.set_detail_t1 > div > textarea')
-                message.clear()
-                time.sleep(1)
-                print("출력할 메세지"+self.message)
-                message.send_keys(self.message)
+                message.send_keys('글 재밌게 읽었습니다.')
                 self.driver.implicitly_wait(0.5)
                 button = self.driver.find_element(By.CSS_SELECTOR, 'body > ui-view > div.head.type1 > a.btn_ok')
                 button.click()
                 self.driver.implicitly_wait(0.5)
+
                 print(f"보낸 서이 요청 수: {cnt}개")
                 self.update_signal.emit(f"보낸 서이 요청 수: {cnt}개")
                 #self.CollectStatus2.append(f"보낸 서이 요청 수: {cnt}개")

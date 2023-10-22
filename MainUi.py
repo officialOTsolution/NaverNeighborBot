@@ -53,6 +53,7 @@ class Ui_Dialog(object):
         self.CollectStatus = QtWidgets.QTextEdit(Dialog)
         self.CollectStatus.setGeometry(QtCore.QRect(50, 350, 301, 261))
         self.CollectStatus.setStyleSheet("border: 1px solid black;")
+        self.CollectStatus.setMarkdown("")
         self.CollectStatus.setObjectName("CollectStatus")
         self.Id = QtWidgets.QLineEdit(Dialog)
         self.Id.setGeometry(QtCore.QRect(520, 120, 161, 21))
@@ -83,6 +84,7 @@ class Ui_Dialog(object):
         self.CollectStatus2 = QtWidgets.QTextEdit(Dialog)
         self.CollectStatus2.setGeometry(QtCore.QRect(420, 350, 311, 261))
         self.CollectStatus2.setStyleSheet("border: 1px solid black;")
+        self.CollectStatus2.setMarkdown("")
         self.CollectStatus2.setObjectName("CollectStatus2")
         self.AddFriendBtn = QtWidgets.QPushButton(Dialog)
         self.AddFriendBtn.setGeometry(QtCore.QRect(420, 270, 311, 51))
@@ -127,17 +129,18 @@ class Ui_Dialog(object):
         self.CollectStatus.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">현재 수집한 아이디 개수 : 0개</span></p></body></html>"))
+"</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:600; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.CollectStatus.setPlaceholderText(_translate("Dialog", "현재 수집한 아이디 개수 : 0개"))
         self.IdCollectBtn.setText(_translate("Dialog", "아이디 수집 시작"))
         self.label_5.setText(_translate("Dialog", "아이디"))
         self.label_6.setText(_translate("Dialog", "비밀번호"))
         self.CollectStatus2.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">현재 보낸 서로이웃 요청 수 : 0개</span></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"><br /></p></body></html>"))
+"</style></head><body style=\" font-family:\'Gulim\'; font-size:9pt; font-weight:600; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.CollectStatus2.setPlaceholderText(_translate("Dialog", "현재 보낸 서로이웃 요청 수 : 0개"))
         self.AddFriendBtn.setText(_translate("Dialog", "서로 이웃 추가"))
         self.label_7.setText(_translate("Dialog", "중복 제거후 남은 아이디 수:"))
         self.Rest.setText(_translate("Dialog", "0"))

@@ -12,10 +12,11 @@ from PyQt5.QtCore import QThread, pyqtSignal
 class FriendAddClass(QThread):
     update_signal = pyqtSignal(str)  # Define a signal to send updates
 
-    def __init__(self, driver, IdList):
+    def __init__(self, driver, IdList, message ="글 재밌게 읽었습니다."):
         super().__init__()
         self.driver = driver
         self.IdList = IdList
+        self.message = message
 
     def run(self):
         processed_ids = []
@@ -42,15 +43,14 @@ class FriendAddClass(QThread):
                 self.driver.implicitly_wait(0.5)
                 message = self.driver.find_element(By.CSS_SELECTOR,
                                               '#buddyAddForm > fieldset > div > div.set_detail_t1 > div.set_detail_t1 > div > textarea')
-                message.send_keys('글 재밌게 읽었습니다.')
+                message.clear()
+                message.send_keys(self.message)
                 self.driver.implicitly_wait(0.5)
                 button = self.driver.find_element(By.CSS_SELECTOR, 'body > ui-view > div.head.type1 > a.btn_ok')
                 button.click()
                 self.driver.implicitly_wait(0.5)
 
-                print(f"보낸 서이 요청 수: {cnt}개")
                 self.update_signal.emit(f"보낸 서이 요청 수: {cnt}개")
-                #self.CollectStatus2.append(f"보낸 서이 요청 수: {cnt}개")
                 if cnt == 100:
                     print('오늘 자 서로이웃 완료')
                     break

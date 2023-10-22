@@ -66,7 +66,6 @@ class SecondWindow(QMainWindow, form_class_1):
         self.setupUi(self)
         self.flag = False
         self.KeyWordList= self.KeyWord.text()
-        self.message = self.message.text()
         self.IdCollectBtn.clicked.connect(self.StartCollect)
         self.AddFriendBtn.clicked.connect(self.NaverLog)
 
@@ -99,11 +98,13 @@ class SecondWindow(QMainWindow, form_class_1):
             self.show_alert("아이디 수집을 먼저 진행해주세요.")
 
     def startFriendAdd(self):
-        self.friend_thread = FriendAddClass(self.driver, self.MacroCollect.IdList)
+        self.friend_thread = FriendAddClass(self.driver, self.MacroCollect.IdList, self.message.text())
         self.friend_thread.update_signal.connect(self.update_gui)
         self.friend_thread.start()
+
     def update_gui(self, message):
         self.CollectStatus2.append(message)
+        
     def show_alert(self, text):
         alert = QMessageBox()
         alert.setWindowTitle("알림")

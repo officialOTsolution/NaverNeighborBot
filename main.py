@@ -94,11 +94,14 @@ class SecondWindow(QMainWindow, form_class_1):
             print("SecondWindow->StartCollec 함수 에러: "+e)
     def FriendAdd(self):
         if self.flag:
-            NaverLogin = NaverLoginClass(self.driver,self.Id.text(), self.Pw.text())
-            NaverLoginReturn = NaverLogin.run()
-            if NaverLoginReturn == 1:
-                FriendMacro = FriendAddClass(self.driver, self.MacroCollect.IdList,self.CollectStatus2, self.message)
-                FriendMacro.run()
+            if self.Id.text() != "" and self.Pw.text() != "":
+                NaverLogin = NaverLoginClass(self.driver,self.Id.text(), self.Pw.text())
+                NaverLoginReturn = NaverLogin.run()
+                if NaverLoginReturn == 1:
+                    FriendMacro = FriendAddClass(self.driver, self.MacroCollect.IdList,self.CollectStatus2, self.message)
+                    FriendMacro.run()
+            else:
+                self.show_alert('네이버 아이디 혹은 비밀번호를 입력해주세요')
         else:
             self.show_alert('아이디 수집을 먼저 진행해주세요.')
 

@@ -9,7 +9,6 @@ from NaverIDCollectfile import NaverIdCollectClass
 from NaverLogin import NaverLoginClass
 from PyQt5.QtCore import *
 from FriendAdd import FriendAddClass
-import threading
 import MainUi
 import LoginUi
 """
@@ -72,15 +71,16 @@ class SecondWindow(QMainWindow, form_class_1):
         self.driver = webdriver.Chrome()
         self.MacroCollect = None
         self.setupUi(self)
+        self.flag = False
         self.KeyWordList= self.KeyWord.text()
+        self.message = self.message.text()
         self.IdCollectBtn.clicked.connect(self.StartCollect)
         self.AddFriendBtn.clicked.connect(self.NaverLog)
         self.worker_thread = None
-        
 
     def StartCollect(self):
         try:
-            print("SecondWindow->StartCollec 함수 호출")
+            print("SecondWindow->StartCollec 함수 호출\n")
             print(self.KeyWordList, self)
             time.sleep(1)
             self.KeyWordList= self.KeyWord.text()
@@ -89,16 +89,13 @@ class SecondWindow(QMainWindow, form_class_1):
             self.MacroCollect.start()
             print(self.MacroCollect.Count, self.MacroCollect.Keyward)
             time.sleep(2)
-            print("SecondWindow->MacroCollect.start() 함수 종료")
+            print("SecondWindow->MacroCollect.start() 함수 종료\n")
         except Exception as e:
             print("SecondWindow->StartCollec 함수 에러: "+e)
     def startFriendAdd(self):
-        self.friend_thread = FriendAddClass(self.driver,self.MacroCollect.IdList,  self.CollectStatus2)
+        self.friend_thread = FriendAddClass(self.driver, self.MacroCollect.IdList)
         self.friend_thread.update_signal.connect(self.update_gui)
         self.friend_thread.start()
-        # self.FriendMacro = FriendAddClass(self.driver, self.MacroCollect.IdList,  self.CollectStatus2)
-        # self.worker_thread = threading.Thread(target=self.FriendMacro.run())
-        # self.worker_thread.start()
     def update_gui(self, message):
         self.CollectStatus2.append(message)
     def NaverLog(self):

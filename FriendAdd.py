@@ -12,7 +12,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 class FriendAddClass(QThread):
     update_signal = pyqtSignal(str)  # Define a signal to send updates
 
-    def __init__(self, driver, IdList, CollectStatus2):
+    def __init__(self, driver, IdList):
         super().__init__()
         self.driver = driver
         self.IdList = IdList

@@ -93,7 +93,6 @@ class SecondWindow(QMainWindow, form_class_1):
         except Exception as e:
             print("SecondWindow->StartCollec 함수 에러: "+e)
     def FriendAdd(self):
-        print("hello world")
         if self.flag:
             NaverLogin = NaverLoginClass(self.driver,self.Id.text(), self.Pw.text())
             NaverLoginReturn = NaverLogin.run()
@@ -102,6 +101,7 @@ class SecondWindow(QMainWindow, form_class_1):
                 FriendMacro.run()
         else:
             self.show_alert('아이디 수집을 먼저 진행해주세요.')
+
     def show_alert(self, text):
         alert = QMessageBox()
         alert.setWindowTitle("알림")
@@ -109,6 +109,7 @@ class SecondWindow(QMainWindow, form_class_1):
         alert.setIcon(QMessageBox.Information)
         alert.setStandardButtons(QMessageBox.Ok)
         alert.exec_()
+
 if __name__ == "__main__":
     myWindow = MyWindow()
     myWindow.show()

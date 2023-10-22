@@ -1,5 +1,4 @@
 import random
-
 import pyperclip
 from selenium.webdriver.common.by import By
 from selenium import webdriver
@@ -9,15 +8,12 @@ from selenium.webdriver.common.keys import Keys
 import time
 from datetime import datetime
 from PyQt5.QtCore import QThread
-
-
 class NaverLoginClass(QThread):
     def __init__(self,driver, Id, Pw):
         super().__init__()
         self.driver = driver
         self.Id = Id
         self.Pw = Pw
-
     def run(self):
         url = 'https://nid.naver.com/nidlogin.login?mode=form&url=https://www.naver.com/'
         self.driver.get(url)

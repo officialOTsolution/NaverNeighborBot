@@ -22,25 +22,19 @@ class FriendAddClass(QThread):
     def run(self):
         processed_ids = []
         cnt = 1
-        random_number = random.randint(1, 13)
         for id in self.IdList:
+            random_number = random.randint(1, 13)
             id = id.replace('\n', '')
             url = f'https://m.blog.naver.com/BuddyAddForm.naver?blogId={id}&returnUrl=https%253A%252F%252Fm.blog.naver.com%252F{id}'
             try:
                 self.driver.get(url)
+                
+                time.sleep(0.5)
                 # 서로이웃버튼 클릭
-                try:
-                    text = self.driver.find_element(By.CSS_SELECTOR, '#lyr6 > div > div.txt_area > p').text
-                    if text == '하루에 신청 가능한 이웃수가 초과되어 더이상 이웃을 추가할 수 없습니다.':
-                        self.update_signal.emit(f"오늘 자 서로이웃 완료")
-                        self.driver.quit()
-                        break
-                except NoSuchElementException:
-                    continue
                 button = self.driver.find_element(By.CSS_SELECTOR, '#bothBuddyRadio')
                 button.click()
                 self.driver.implicitly_wait(2)
-
+                time.sleep(0.5)
                 button = self.driver.find_element(By.CSS_SELECTOR, '#buddyGroupSelect')
                 button.click()
                 self.driver.implicitly_wait(0.5)
@@ -57,12 +51,15 @@ class FriendAddClass(QThread):
                 button = self.driver.find_element(By.CSS_SELECTOR, 'body > ui-view > div.head.type1 > a.btn_ok')
                 button.click()
                 self.driver.implicitly_wait(0.5)
-                time.sleep(100)
-                self.update_signal.emit(f"보낸 서이 요청 수: {cnt}개")
-                
+                self.update_signal.emit(f"서로이웃 요청이 보내졌습니다.")
                 cnt += 1
-            except WebDriverException:
-                self.driver = webdriver.Chrome() 
-                self.run()
             except:
+                try:
+                    text = self.driver.find_element(By.CSS_SELECTOR, '#lyr6 > div > div.txt_area > p').text
+                    if text == '하루에 신청 가능한 이웃수가 초과되어 더이상 이웃을 추가할 수 없습니다.':
+                        self.update_signal.emit(f"오늘 자 서로이웃 완료")
+                        self.driver.quit()
+                        break
+                except:
+                    continue
                 continue

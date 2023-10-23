@@ -15,8 +15,16 @@ import LoginUi
 환경: python 3.9.16 my_proj:conda
 """
 app = QApplication(sys.argv)
-form_class = uic.loadUiType("LoginUi.ui")[0]
-form_class_1 = uic.loadUiType("MainUi.ui")[0]
+import sys
+import os
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+form = resource_path("LoginUi.ui")
+form1 = resource_path("MainUi.ui")
+form_class = uic.loadUiType(form)[0]
+form_class_1 = uic.loadUiType(form1)[0]
 
 class MyWindow(QMainWindow, LoginUi.Ui_Dialog):
     progress_start = pyqtSignal(int)
@@ -81,14 +89,13 @@ class SecondWindow(QMainWindow, form_class_1):
                 self.MacroCollect = NaverIdCollectClass(self.driver, self.KeyWordList, self.CollectStatus, self.Rest, int(self.Count.text()))
                 self.MacroCollect.start()
                 print(self.MacroCollect.Count, self.MacroCollect.Keyward)
-                time.sleep(2)
+                time.sleep(1)
                 print("SecondWindow->MacroCollect.start() 함수 종료\n")
             else:
                 self.show_alert("키워드를 입력해주세요.")
         except Exception as e:
             print("SecondWindow->StartCollect 함수 에러: "+str(e))
             self.show_alert("개수를 입력해주세요.")
-        
 
     def NaverLog(self):
         if self.flag:
@@ -125,3 +132,8 @@ if __name__ == "__main__":
 
 # python -m PyQt5.uic.pyuic -x LoginUi.ui -o Ui.py
 # python -m PyInstaller --onefile --noconsole main.py
+# python -m PyInstaller --onefile main.py
+# python -m pyinstaller --onefile --add-data "path/to/other_script.py;." main_script.py
+#pyinstaller --noconsole main.py
+#datas=[('LoginUi.ui', '.'), ('MainUi.ui', '.')],
+#pyinstaller main.spec

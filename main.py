@@ -14,6 +14,7 @@ import MainUi
 import LoginUi
 """
 환경: python 3.9.16 my_proj:conda
+branch: happy
 """
 app = QApplication(sys.argv)
 import sys

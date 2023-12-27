@@ -12,6 +12,10 @@ from PyQt5.QtCore import *
 from FriendAdd import FriendAddClass
 import MainUi
 import LoginUi2
+from PyQt5 import QtWidgets 
+from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QStackedWidget
+from PyQt5.uic import loadUi
+
 """
 환경: python 3.9.16 my_proj:conda
 """
@@ -37,6 +41,7 @@ class MyWindow(QMainWindow, LoginUi2.Ui_Dialog):
     def __init__(self):
         super().__init__()
         self.selen = None
+        self.widget =  QStackedWidget()
         self.setupUi(self)
         self.StartBtn.clicked.connect(self.resume)
         self.HowToUse.clicked.connect(self.manul_link)
@@ -46,12 +51,14 @@ class MyWindow(QMainWindow, LoginUi2.Ui_Dialog):
         if LoginInfor == 1:
             self.show_alert('로그인 성공 \n확인 클릭시 제품 페이지로 이동합니다')
             self.hide()
-            self.selen = SecondWindow()
-            self.selen.show()
+            secondwindow = SecondWindow()
+            self.widget.addWidget(secondwindow)
+            self.widget.setFixedHeight(718)
+            self.widget.setFixedWidth(761)
+            self.widget.show()
+
         else:
             self.show_alert('로그인 실패 \n아이디와 패스워드를 다시 입력해주세요.')
-    def pause(self):
-        self.selen.pause()
     def Login(self):
         if self.ID.text() == 'admin' and self.PW.text() == "1004":
             return 1
@@ -71,35 +78,36 @@ class MyWindow(QMainWindow, LoginUi2.Ui_Dialog):
         url = r"https://cafe.naver.com/onetouchsolution" 
         webbrowser.open(url)
 
-class SecondWindow(QMainWindow, form_class_1):
+class SecondWindow(QMainWindow,QDialog):
     def __init__(self):
-        super().__init__()
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        super(SecondWindow, self).__init__()
+        loadUi("MainUi.ui",self)
         self.MacroCollect = None
-        self.setupUi(self)
-
-        self.second_ui = ThirdWindow()
+        self.widget =  QStackedWidget()
         self.flag = False
-        self.AddPageFlag = True
         self.KeyWordList= self.KeyWord.text()
         self.IdCollectBtn.clicked.connect(self.StartCollect)
         self.AddFriendBtn.clicked.connect(self.NaverLog)
-        self.tabWidget.currentChanged.connect(self.handle_tab_change)
+        self.ButtonDelete.clicked.connect(self.show_delete_ui)
+        self.ButtonSetting.clicked.connect(self.show_setting_ui)
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        
+    def show_setting_ui(self):
+        self.driver.quit()
+        settingwindow = FirthdWindow()
+        #settingwindow.setFixedSize(360,259)
+        self.widget.addWidget(settingwindow)
+        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
+        self.setCentralWidget(self.widget)
 
-    def handle_tab_change(self, index):
-        if index == 0:
-            self.show_first_ui_window()
-        if index == 1:  # Second Tab
-            self.show_second_ui_window()
+    def show_delete_ui(self):
+        self.driver.quit()
+        thirdwindow = ThirdWindow()
+        #thirdwindow.setFixedSize(360,259)
+        self.widget.addWidget(thirdwindow)
+        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
+        self.setCentralWidget(self.widget)
 
-    def show_first_ui_window(self):
-        # FirstUI를 보여줄 때
-        print("ShowFirstUI")
-
-    def show_second_ui_window(self):
-        # SecondUI를 보여줄 때
-        print("Show second UI window")
-        self.setCentralWidget(self.second_ui)
     def StartCollect(self):
         try:
             print("SecondWindow->StartCollec 함수 호출\n")
@@ -148,21 +156,55 @@ class SecondWindow(QMainWindow, form_class_1):
         alert.setStandardButtons(QMessageBox.Ok)
         alert.exec_()
 
-class ThirdWindow(QMainWindow, form_class_2):
+#삭제창
+class ThirdWindow(QMainWindow):
     def __init__(self):
-        super().__init__()
-        self.setupUi(self)
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
-        print("Third Window")
-        self.tabWidget.currentChanged.connect(self.handle_tab_change)
-    def handle_tab_change(self, index):
-        if index == 0:
-            self.show_first_ui_window()
-        if index == 1:  # Second Tab
-            self.show_second_ui_window()
+        super(ThirdWindow,self).__init__()
+        loadUi("DeleteUi.ui", self)
+        self.widget =  QStackedWidget()
+        self.ButtonAdd.clicked.connect(self.show_main_window)
+        self.ButtonSetting.clicked.connect(self.show_setting_window)
+
+    def show_main_window(self):
+        secondwindow = SecondWindow()
+        #secondwindow.setFixedSize(761,718)
+        self.widget.addWidget(secondwindow)
+        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
+        self.setCentralWidget(self.widget)
+
+    def show_setting_window(self):
+        firthdwindow = FirthdWindow()
+        #thirdwindow.setFixedSize(360,259)
+        self.widget.addWidget(firthdwindow)
+        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
+        self.setCentralWidget(self.widget)
+
+class FirthdWindow(QMainWindow):
+    def __init__(self):
+        super(FirthdWindow,self).__init__()
+        loadUi("Setting.ui", self)
+        self.widget =  QStackedWidget()
+        self.ButtonAdd.clicked.connect(self.show_main_window)
+        self.ButtonDelete.clicked.connect(self.show_delete_window)
+    def show_main_window(self):
+        secondwindow = SecondWindow()
+        #secondwindow.setFixedSize(761,718)
+        self.widget.addWidget(secondwindow)
+        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
+        self.setCentralWidget(self.widget)
+    def show_delete_window(self):
+        thirdwindow = ThirdWindow()
+        #thirdwindow.setFixedSize(360,259)
+        self.widget.addWidget(thirdwindow)
+        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
+        self.setCentralWidget(self.widget)
+
 if __name__ == "__main__":
     myWindow = MyWindow()
+    myWindow.setFixedHeight(486)
+    myWindow.setFixedWidth(410)
     myWindow.show()
+
     sys.exit(app.exec_())
 
 # python -m PyQt5.uic.pyuic -x LoginUi.ui -o Ui.py

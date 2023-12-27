@@ -11,7 +11,7 @@ from NaverLogin import NaverLoginClass
 from PyQt5.QtCore import *
 from FriendAdd import FriendAddClass
 import MainUi
-import LoginUi
+import LoginUi2
 """
 환경: python 3.9.16 my_proj:conda
 """
@@ -22,12 +22,16 @@ def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
-form = resource_path("LoginUi.ui")
+
+form = resource_path("LoginUi2.ui")
 form1 = resource_path("MainUi.ui")
+form2 = resource_path("DeleteUi.ui")
+
 form_class = uic.loadUiType(form)[0]
 form_class_1 = uic.loadUiType(form1)[0]
+form_class_2 = uic.loadUiType(form2)[0]
 
-class MyWindow(QMainWindow, LoginUi.Ui_Dialog):
+class MyWindow(QMainWindow, LoginUi2.Ui_Dialog):
     progress_start = pyqtSignal(int)
     progress_finish = pyqtSignal()
     def __init__(self):
@@ -73,11 +77,29 @@ class SecondWindow(QMainWindow, form_class_1):
         self.driver = webdriver.Chrome(ChromeDriverManager().install())
         self.MacroCollect = None
         self.setupUi(self)
+
+        self.second_ui = ThirdWindow()
         self.flag = False
+        self.AddPageFlag = True
         self.KeyWordList= self.KeyWord.text()
         self.IdCollectBtn.clicked.connect(self.StartCollect)
         self.AddFriendBtn.clicked.connect(self.NaverLog)
+        self.tabWidget.currentChanged.connect(self.handle_tab_change)
 
+    def handle_tab_change(self, index):
+        if index == 0:
+            self.show_first_ui_window()
+        if index == 1:  # Second Tab
+            self.show_second_ui_window()
+
+    def show_first_ui_window(self):
+        # FirstUI를 보여줄 때
+        print("ShowFirstUI")
+
+    def show_second_ui_window(self):
+        # SecondUI를 보여줄 때
+        print("Show second UI window")
+        self.setCentralWidget(self.second_ui)
     def StartCollect(self):
         try:
             print("SecondWindow->StartCollec 함수 호출\n")
@@ -125,7 +147,19 @@ class SecondWindow(QMainWindow, form_class_1):
         alert.setIcon(QMessageBox.Information)
         alert.setStandardButtons(QMessageBox.Ok)
         alert.exec_()
-        
+
+class ThirdWindow(QMainWindow, form_class_2):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        print("Third Window")
+        self.tabWidget.currentChanged.connect(self.handle_tab_change)
+    def handle_tab_change(self, index):
+        if index == 0:
+            self.show_first_ui_window()
+        if index == 1:  # Second Tab
+            self.show_second_ui_window()
 if __name__ == "__main__":
     myWindow = MyWindow()
     myWindow.show()

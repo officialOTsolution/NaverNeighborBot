@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>452</width>
-    <height>486</height>
+    <height>544</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -61,7 +61,8 @@ border-radius: 100px;</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: #ff0000;border: 2px solid red;</string>
+    <string notr="true">background-color: 
+#ff0000;border: 2px solid red;</string>
    </property>
    <property name="text">
     <string>로그인</string>
@@ -218,8 +219,8 @@ border-radius: 100px;</string>
   <widget class="QPushButton" name="HowToUse">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>400</y>
+     <x>241</x>
+     <y>397</y>
      <width>151</width>
      <height>41</height>
     </rect>
@@ -240,8 +241,8 @@ border-radius: 100px;</string>
   <widget class="QPushButton" name="InstaLInk">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>400</y>
+     <x>81</x>
+     <y>397</y>
      <width>141</width>
      <height>41</height>
     </rect>
@@ -257,6 +258,23 @@ border-radius: 100px;</string>
    </property>
    <property name="text">
     <string>개발자 인스타</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>447</y>
+     <width>162</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: 
+#ff0000;border: 2px solid red;</string>
+   </property>
+   <property name="text">
+    <string>아이디 비밀번호 찾기</string>
    </property>
   </widget>
  </widget>

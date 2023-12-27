@@ -78,7 +78,7 @@ color : black;
 padding : 5px;</string>
     </property>
     <property name="text">
-     <string>ㅁㄴㅇㄴㅇ</string>
+     <string/>
     </property>
     <property name="echoMode">
      <enum>QLineEdit::Password</enum>
@@ -138,7 +138,7 @@ padding : 5px;</string>
      <string>네이버 아이디</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="message">
+   <widget class="QLineEdit" name="Message">
     <property name="geometry">
      <rect>
       <x>390</x>
@@ -180,7 +180,7 @@ padding : 0px 5px;</string>
      <string>서로이웃 신청 메세지를 입력해주세요</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="AddFriendBtn_2">
+   <widget class="QPushButton" name="LoginTest">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -215,10 +215,10 @@ color : white;</string>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>290</y>
+      <x>391</x>
+      <y>271</y>
       <width>288</width>
-      <height>41</height>
+      <height>53</height>
      </rect>
     </property>
     <property name="sizePolicy">

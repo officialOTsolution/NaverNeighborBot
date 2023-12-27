@@ -496,7 +496,7 @@ color : white;</string>
     <string>그룹 선택</string>
    </property>
   </widget>
-  <widget class="QSpinBox" name="spinBox">
+  <widget class="QSpinBox" name="GroupSelect">
    <property name="geometry">
     <rect>
      <x>430</x>

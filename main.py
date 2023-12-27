@@ -1,6 +1,4 @@
 import time
-import math
-import sys
 from selenium import webdriver
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
@@ -10,32 +8,64 @@ from NaverIDCollectfile import NaverIdCollectClass
 from NaverLogin import NaverLoginClass
 from PyQt5.QtCore import *
 from FriendAdd import FriendAddClass
+from PyQt5 import QtWidgets 
+from PyQt5.uic import loadUi
+from PyQt5.QtWidgets import *
+import time
+from selenium import webdriver
+from PyQt5 import uic
+import webbrowser
 import MainUi
 import LoginUi2
-from PyQt5 import QtWidgets 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QStackedWidget
-from PyQt5.uic import loadUi
-
+import sys
+import os
 """
 환경: python 3.9.16 my_proj:conda
 """
 app = QApplication(sys.argv)
-import sys
-import os
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
-form = resource_path("LoginUi2.ui")
-form1 = resource_path("MainUi.ui")
-form2 = resource_path("DeleteUi.ui")
+class Parent():
+    def __init__(self):
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.widget =  QStackedWidget()
 
-form_class = uic.loadUiType(form)[0]
-form_class_1 = uic.loadUiType(form1)[0]
-form_class_2 = uic.loadUiType(form2)[0]
+    def show_alert(self, text):
+        alert = QMessageBox()
+        alert.setWindowTitle("알림")
+        alert.setText(text)
+        alert.setIcon(QMessageBox.Information)
+        alert.setStandardButtons(QMessageBox.Ok)
+        alert.exec_()
 
-class MyWindow(QMainWindow, LoginUi2.Ui_Dialog):
+    def show_setting_window(self):
+        self.driver.quit()
+        settingwindow = FirthdWindow()
+        #settingwindow.setFixedSize(360,259)
+        self.widget.addWidget(settingwindow)
+        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
+        self.setCentralWidget(self.widget)
+
+    def show_delete_window(self):
+        self.driver.quit()
+        thirdwindow = ThirdWindow()
+        #thirdwindow.setFixedSize(360,259)
+        self.widget.addWidget(thirdwindow)
+        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
+        self.setCentralWidget(self.widget)
+
+    def show_main_window(self):
+        secondwindow = SecondWindow()
+        #secondwindow.setFixedSize(761,718)
+        self.widget.addWidget(secondwindow)
+        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
+        self.setCentralWidget(self.widget)
+
+class MyWindow(QMainWindow, LoginUi2.Ui_Dialog,Parent):
     progress_start = pyqtSignal(int)
     progress_finish = pyqtSignal()
     def __init__(self):
@@ -64,13 +94,6 @@ class MyWindow(QMainWindow, LoginUi2.Ui_Dialog):
             return 1
         else:
             return 2
-    def show_alert(self, text):
-        alert = QMessageBox()
-        alert.setWindowTitle("알림")
-        alert.setText(text)
-        alert.setIcon(QMessageBox.Information)
-        alert.setStandardButtons(QMessageBox.Ok)
-        alert.exec_()
     def insta_link(self):
         url = r"https://www.instagram.com/onetouch_sol/" 
         webbrowser.open(url)
@@ -78,7 +101,8 @@ class MyWindow(QMainWindow, LoginUi2.Ui_Dialog):
         url = r"https://cafe.naver.com/onetouchsolution" 
         webbrowser.open(url)
 
-class SecondWindow(QMainWindow,QDialog):
+
+class SecondWindow(QMainWindow,QDialog,Parent):
     def __init__(self):
         super(SecondWindow, self).__init__()
         loadUi("MainUi.ui",self)
@@ -87,26 +111,8 @@ class SecondWindow(QMainWindow,QDialog):
         self.flag = False
         self.KeyWordList= self.KeyWord.text()
         self.IdCollectBtn.clicked.connect(self.StartCollect)
-        self.AddFriendBtn.clicked.connect(self.NaverLog)
-        self.ButtonDelete.clicked.connect(self.show_delete_ui)
-        self.ButtonSetting.clicked.connect(self.show_setting_ui)
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
-        
-    def show_setting_ui(self):
-        self.driver.quit()
-        settingwindow = FirthdWindow()
-        #settingwindow.setFixedSize(360,259)
-        self.widget.addWidget(settingwindow)
-        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
-        self.setCentralWidget(self.widget)
-
-    def show_delete_ui(self):
-        self.driver.quit()
-        thirdwindow = ThirdWindow()
-        #thirdwindow.setFixedSize(360,259)
-        self.widget.addWidget(thirdwindow)
-        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
-        self.setCentralWidget(self.widget)
+        self.ButtonDelete.clicked.connect(self.show_delete_window)
+        self.ButtonSetting.clicked.connect(self.show_setting_window)
 
     def StartCollect(self):
         try:
@@ -127,8 +133,33 @@ class SecondWindow(QMainWindow,QDialog):
         except Exception as e:
             print("SecondWindow->StartCollect 함수 에러: "+str(e))
             self.show_alert("개수를 입력해주세요.")
+    def startFriendAdd(self):
+        self.friend_thread = FriendAddClass(self.driver, self.MacroCollect.IdList, self.message.text())
+        self.friend_thread.update_signal.connect(self.update_gui)
+        self.friend_thread.start()
+    def update_gui(self, message):
+        self.CollectStatus2.append(message)
 
-    def NaverLog(self):
+
+#삭제창
+class ThirdWindow(QMainWindow,Parent):
+    def __init__(self):
+        super(ThirdWindow,self).__init__()
+        loadUi("DeleteUi.ui", self)
+        self.widget =  QStackedWidget()
+        self.ButtonAdd.clicked.connect(self.show_main_window)
+        self.ButtonSetting.clicked.connect(self.show_setting_window)
+
+    
+class FirthdWindow(QMainWindow,Parent):
+    def __init__(self):
+        super(FirthdWindow,self).__init__()
+        loadUi("Setting.ui", self)
+        self.widget =  QStackedWidget()
+        self.ButtonAdd.clicked.connect(self.show_main_window)
+        self.ButtonDelete.clicked.connect(self.show_delete_window)
+        self.LoginTest.clicked.connect(self.NaverLogTesting)
+    def NaverLogTesting(self):
         if self.flag:
             if self.Id.text() != "" and self.Pw.text() != "":
                 NaverLogin = NaverLoginClass(self.driver,self.Id.text(), self.Pw.text())
@@ -139,66 +170,7 @@ class SecondWindow(QMainWindow,QDialog):
                 self.show_alert("네이버 아이디를 먼저 입력해주세요.")
         else:
             self.show_alert("아이디 수집을 먼저 진행해주세요.")
-
-    def startFriendAdd(self):
-        self.friend_thread = FriendAddClass(self.driver, self.MacroCollect.IdList, self.message.text())
-        self.friend_thread.update_signal.connect(self.update_gui)
-        self.friend_thread.start()
-
-    def update_gui(self, message):
-        self.CollectStatus2.append(message)
-        
-    def show_alert(self, text):
-        alert = QMessageBox()
-        alert.setWindowTitle("알림")
-        alert.setText(text)
-        alert.setIcon(QMessageBox.Information)
-        alert.setStandardButtons(QMessageBox.Ok)
-        alert.exec_()
-
-#삭제창
-class ThirdWindow(QMainWindow):
-    def __init__(self):
-        super(ThirdWindow,self).__init__()
-        loadUi("DeleteUi.ui", self)
-        self.widget =  QStackedWidget()
-        self.ButtonAdd.clicked.connect(self.show_main_window)
-        self.ButtonSetting.clicked.connect(self.show_setting_window)
-
-    def show_main_window(self):
-        secondwindow = SecondWindow()
-        #secondwindow.setFixedSize(761,718)
-        self.widget.addWidget(secondwindow)
-        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
-        self.setCentralWidget(self.widget)
-
-    def show_setting_window(self):
-        firthdwindow = FirthdWindow()
-        #thirdwindow.setFixedSize(360,259)
-        self.widget.addWidget(firthdwindow)
-        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
-        self.setCentralWidget(self.widget)
-
-class FirthdWindow(QMainWindow):
-    def __init__(self):
-        super(FirthdWindow,self).__init__()
-        loadUi("Setting.ui", self)
-        self.widget =  QStackedWidget()
-        self.ButtonAdd.clicked.connect(self.show_main_window)
-        self.ButtonDelete.clicked.connect(self.show_delete_window)
-    def show_main_window(self):
-        secondwindow = SecondWindow()
-        #secondwindow.setFixedSize(761,718)
-        self.widget.addWidget(secondwindow)
-        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
-        self.setCentralWidget(self.widget)
-    def show_delete_window(self):
-        thirdwindow = ThirdWindow()
-        #thirdwindow.setFixedSize(360,259)
-        self.widget.addWidget(thirdwindow)
-        self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
-        self.setCentralWidget(self.widget)
-
+ 
 if __name__ == "__main__":
     myWindow = MyWindow()
     myWindow.setFixedHeight(486)

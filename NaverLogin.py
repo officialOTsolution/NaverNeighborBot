@@ -1,13 +1,13 @@
-import random
-import pyperclip
 from selenium.webdriver.common.by import By
 from selenium import webdriver
-from PyQt5.QtCore import *
-from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import time
-from datetime import datetime
 from PyQt5.QtCore import QThread
+from PyQt5.QtCore import *
+
+import time
+import random
+import pyperclip
+from datetime import datetime
 
 class NaverLoginClass(QThread):
     def __init__(self,driver, Id="", Pw=""):

@@ -1,21 +1,17 @@
-import random
-import pyperclip
 from selenium.webdriver.common.by import By
 from selenium import webdriver
-from PyQt5.QtCore import *
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import time
-from webdriver_manager.chrome import ChromeDriverManager
-import webbrowser
-from datetime import datetime
-from PyQt5.QtCore import QThread, pyqtSignal
 from selenium.common.exceptions import *
+from PyQt5.QtCore import *
+from PyQt5.QtCore import QThread, pyqtSignal
+
+import random
 
 class FriendAddClass(QThread):
     update_signal = pyqtSignal(str)  # Define a signal to send updates
 
-    def __init__(self, driver, IdList, message ="글 재밌게 읽었습니다."):
+    def __init__(self, driver, IdList, message =""):
         super().__init__()
         self.driver = driver
         self.IdList = IdList

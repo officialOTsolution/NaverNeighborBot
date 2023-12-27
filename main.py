@@ -1,25 +1,27 @@
-import time
-from selenium import webdriver
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
-import webbrowser
-from webdriver_manager.chrome import ChromeDriverManager
-from NaverIDCollectfile import NaverIdCollectClass
-from NaverLogin import NaverLoginClass
 from PyQt5.QtCore import *
-from FriendAdd import FriendAddClass
+from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QStackedWidget
 from PyQt5 import QtWidgets 
 from PyQt5.uic import loadUi
-from PyQt5.QtWidgets import *
-import time
-from selenium import webdriver
-from PyQt5 import uic
+
 import webbrowser
-import MainUi
-import LoginUi2
-from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QStackedWidget
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium import webdriver
+
+import time
 import sys
 import os
+
+import LoginUi2
+import MainUi
+
+from FriendAdd import FriendAddClass
+from FriendDelete import FriendDeleteClass
+from NaverIDCollectfile import NaverIdCollectClass
+from NaverLogin import NaverLoginClass
+
 """
 환경: python 3.9.16 my_proj:conda
 """
@@ -34,17 +36,8 @@ class Parent():
         self.driver = webdriver.Chrome(ChromeDriverManager().install())
         self.widget =  QStackedWidget()
         self.flag = False
-        self.Id = ""
-        self.Pw = ""
-        self.AutoMessage = "글 재밌게 읽었습니다."
-    def set_message(self, message):
-        self.AutoMessage = message
-    def set_flag(self, conditional):
-        self.flag = conditional
-    def set_Id(self,id):
-        self.Id = id
-    def set_Pw(self,pw):
-        self.Pw = pw
+    def set_flag_true(self):
+        self.flag = True
 
     def show_alert(self, text):
         alert = QMessageBox()
@@ -76,6 +69,7 @@ class Parent():
         self.widget.addWidget(secondwindow)
         self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
         self.setCentralWidget(self.widget)
+
 class MyWindow(QMainWindow, LoginUi2.Ui_Dialog,Parent):
     progress_start = pyqtSignal(int)
     progress_finish = pyqtSignal()
@@ -122,29 +116,52 @@ class SecondWindow(QMainWindow,QDialog,Parent):
         self.IdCollectBtn.clicked.connect(self.StartCollect)
         self.ButtonDelete.clicked.connect(self.show_delete_window)
         self.ButtonSetting.clicked.connect(self.show_setting_window)
+        self.AddFriendBtn.clicked.connect(self.startFriendAdd)
 
     def StartCollect(self):
         try:
-            print("SecondWindow->StartCollec 함수 호출\n")
-            print(self.KeyWordList, self)
+            print("StartCollect 함수 호출\n")
+            print(self.KeyWordList)
             time.sleep(1)
             if self.KeyWord.text() != "":
                 self.KeyWordList= self.KeyWord.text()
                 self.KeyWordList = [self.KeyWordList]
-                self.MacroCollect = NaverIdCollectClass(self.driver, self.KeyWordList, self.CollectStatus, self.Rest, int(self.Count.text()))
+                #self.MacroCollect = NaverIdCollectClass(self.driver, self.KeyWordList, self.CollectStatus, self.Rest, int(self.Count.text()))
+                self.MacroCollect = NaverIdCollectClass(self.driver, self.KeyWordList,int(self.Count.text()))
+
+                # NaverIdCollectClass의 시그널과 연결
+                self.MacroCollect.update_status.connect(self.CollectStatus.append)
+                self.MacroCollect.update_rest.connect(lambda value: self.Rest.setText(value))
+
                 self.MacroCollect.start()
                 print(self.MacroCollect.Count, self.MacroCollect.Keyward)
-                time.sleep(1)
-                print("SecondWindow->MacroCollect.start() 함수 종료\n")
+                print("MacroCollect.start() 함수 종료\n")
             else:
                 self.show_alert("키워드를 입력해주세요.")
         except Exception as e:
             print("SecondWindow->StartCollect 함수 에러: "+str(e))
             self.show_alert("개수를 입력해주세요.")
     def startFriendAdd(self):
-        self.friend_thread = FriendAddClass(self.driver, self.MacroCollect.IdList, self.AutoMessage)
-        self.friend_thread.update_signal.connect(self.update_gui)
-        self.friend_thread.start()
+        try:
+            with open('user_data.txt', 'r', encoding='utf-8') as file:
+                lines = file.readlines()
+                if lines:
+                    self.NaverId = lines[0].strip()
+                    if len(lines) > 1:
+                        self.NaverPw = lines[1].strip()
+            with open('user_message.txt', 'r', encoding='utf-8') as file:
+                    self.AutoMessage = file.read().strip()
+            
+            NaverLogin = NaverLoginClass(self.driver,self.NaverId, self.NaverPw)
+            NaverLoginReturn = NaverLogin.run()
+            if NaverLoginReturn == 1:
+                #print(self.AutoMessage)
+                self.friend_thread = FriendAddClass(self.driver, self.MacroCollect.IdList, self.AutoMessage)
+                self.friend_thread.update_signal.connect(self.update_gui)
+                self.friend_thread.start()
+        except Exception as e:
+            print(f"예외가 발생했습니다: {e}")
+            self.show_alert("네이버 아이디 정보가 없습니다.")
     def update_gui(self, message):
         self.CollectStatus2.append(message)
 
@@ -154,10 +171,26 @@ class ThirdWindow(QMainWindow,Parent):
     def __init__(self):
         super(ThirdWindow,self).__init__()
         loadUi("DeleteUi.ui", self)
-        self.widget =  QStackedWidget()
         self.ButtonAdd.clicked.connect(self.show_main_window)
         self.ButtonSetting.clicked.connect(self.show_setting_window)
-
+        self.Delete.clicked.connect(self.Neighbor_delete)
+        
+    def Neighbor_delete(self):
+        try:
+            with open('user_data.txt', 'r') as file:
+                lines = file.readlines()
+                if lines:
+                    self.NaverId = lines[0].strip()
+                    if len(lines) > 1:
+                        self.NaverPw = lines[1].strip()
+            print(self.NaverId, self.NaverPw)
+            frienddelete = FriendDeleteClass(self.driver, self.NaverId, self.NaverPw)
+            frienddeleteReturn = frienddelete.run()
+            if frienddeleteReturn == 1:
+                self.show_alert("삭제 완료")
+        except:
+            self.show_alert("네이버 아이디 정보가 없습니다.")
+        
     
 class FirthdWindow(QMainWindow,Parent):
     def __init__(self):
@@ -168,22 +201,24 @@ class FirthdWindow(QMainWindow,Parent):
         self.ButtonDelete.clicked.connect(self.show_delete_window)
         self.LoginTest.clicked.connect(self.NaverLogTesting)
         self.SaveMessage.clicked.connect(self.save_message)
+        
     def NaverLogTesting(self):
         if self.Id.text() != "" and self.Pw.text() != "":
             NaverLogin = NaverLoginClass(self.driver,self.Id.text(), self.Pw.text())
             NaverLoginReturn = NaverLogin.run()
             if NaverLoginReturn == 1:
-                print("로그인 성공")
-                self.set_Id(self.Id.text())
-                self.set_Pw(self.Pw.text())
+                with open('user_data.txt', 'w', encoding='utf-8') as file:
+                    file.write(f"{self.Id.text()}\n{self.Pw.text()}\n")
+                    self.show_alert("네이버 로그인 성공")
             else:
                 self.show_alert("네이버 로그인 실패")
         else:
             self.show_alert("네이버 아이디를 먼저 입력해주세요.")
     def save_message(self):
-        self.set_message(self.Message.text())
-        print(self.AutoMessage)
-        
+        with open('user_message.txt', 'w', encoding='utf-8') as file: 
+            file.write(self.Message.text())
+        self.show_alert("저장 완료")
+
  
 if __name__ == "__main__":
     myWindow = MyWindow()

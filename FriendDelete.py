@@ -29,7 +29,7 @@ class FriendDeleteClass(QThread):
         print(self.Pw, self.Id)
         self.driver.find_element(By.ID, 'pw').send_keys(Keys.CONTROL, 'V') 
         self.driver.find_element(By.XPATH, '//*[@id="log.login"]/span').click()
-        time.sleep(3)
+        time.sleep(1)
 
         #유저 블로그 아이디 가져오기
         blog_url = 'https://section.blog.naver.com/BlogHome.naver?directoryNo=0&currentPage=1&groupId=0'

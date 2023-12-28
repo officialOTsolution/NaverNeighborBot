@@ -6,19 +6,14 @@ class NaverIdCollectClass(QThread):
     # 스레드 간 통신을 위한 시그널 정의
     update_status = pyqtSignal(str)
     update_rest = pyqtSignal(str)
-
+    finished_signal = pyqtSignal(int)
     def __init__(self, driver, Keyward, Count=1):
         super().__init__()
         self.driver = driver
         self.Keyward = Keyward
         self.IdList = []
-        self.Count = Count
+        self.Count = Count//30
         self.running = False  # 스레드 일시 중지를 위한 플래그
-
-        # # 타이머 생성
-        # self.timer = QTimer(self)
-        # self.timer.timeout.connect(self.run)
-        # self.timer.start(1000)  # 1초마다 run 메서드 호출
 
     def run(self):
         try:
@@ -52,7 +47,7 @@ class NaverIdCollectClass(QThread):
             cnt = 0
             with open('NaverIds.txt', 'a', encoding='utf-8') as file:
                 for id_item in self.IdList:
-                    if not "https://" in id_item:
+                    if not "http" in id_item:
                         cnt += 1
                         file.write(f"{id_item}\n")
             # 스레드 간 통신을 통해 GUI 업데이트
@@ -60,3 +55,5 @@ class NaverIdCollectClass(QThread):
 
         except Exception as e:
             print("run 함수 에러 발생:" + str(e))
+        finally:
+            self.finished_signal.emit(1)

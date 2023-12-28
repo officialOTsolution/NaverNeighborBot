@@ -16,6 +16,8 @@ import os
 
 import LoginUi2
 import MainUi
+import Setting
+import DeleteUi
 
 from FriendAdd import FriendAddClass
 from FriendDelete import FriendDeleteClass
@@ -25,7 +27,7 @@ from NaverLogin import NaverLoginClass
 """
 환경: python 3.9.16 my_proj:conda
 """
-app = QApplication(sys.argv)
+
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
@@ -33,7 +35,6 @@ def resource_path(relative_path):
 
 class Parent():
     def __init__(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
         self.widget =  QStackedWidget()
         self.flag = False
     def set_flag_true(self):
@@ -48,27 +49,29 @@ class Parent():
         alert.exec_()
 
     def show_setting_window(self):
-        self.driver.quit()
+        #self.driver.quit()
         settingwindow = FirthdWindow()
-        #settingwindow.setFixedSize(360,259)
+        settingwindow.setFixedSize(761,718)
         self.widget.addWidget(settingwindow)
         self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
         self.setCentralWidget(self.widget)
 
     def show_delete_window(self):
-        self.driver.quit()
+        #self.driver.quit()
         thirdwindow = ThirdWindow()
-        #thirdwindow.setFixedSize(360,259)
+        thirdwindow.setFixedSize(761,718)
         self.widget.addWidget(thirdwindow)
         self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
         self.setCentralWidget(self.widget)
 
     def show_main_window(self):
+        #self.driver.quit()
         secondwindow = SecondWindow()
-        #secondwindow.setFixedSize(761,718)
+        secondwindow.setFixedSize(761,718)
         self.widget.addWidget(secondwindow)
         self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
         self.setCentralWidget(self.widget)
+        
 
 class MyWindow(QMainWindow, LoginUi2.Ui_Dialog,Parent):
     progress_start = pyqtSignal(int)
@@ -87,9 +90,9 @@ class MyWindow(QMainWindow, LoginUi2.Ui_Dialog,Parent):
             self.show_alert('로그인 성공 \n확인 클릭시 제품 페이지로 이동합니다')
             self.hide()
             secondwindow = SecondWindow()
+            secondwindow.setFixedSize(761,718)
+            self.widget.setFixedSize(761,718)
             self.widget.addWidget(secondwindow)
-            self.widget.setFixedHeight(718)
-            self.widget.setFixedWidth(761)
             self.widget.show()
 
         else:
@@ -106,31 +109,34 @@ class MyWindow(QMainWindow, LoginUi2.Ui_Dialog,Parent):
         url = r"https://cafe.naver.com/onetouchsolution" 
         webbrowser.open(url)
 
-class SecondWindow(QMainWindow,QDialog,Parent):
+class SecondWindow(QMainWindow,MainUi.Ui_Dialog,QDialog,Parent):
     def __init__(self):
         super(SecondWindow, self).__init__()
         loadUi("MainUi.ui",self)
+
+        #self.setWindowTitle("서로이웃 추가 자동화 봇 - 추가창")
         self.MacroCollect = None
-        self.widget =  QStackedWidget()
+        self.widget = QStackedWidget()
         self.KeyWordList= self.KeyWord.text()
         self.IdCollectBtn.clicked.connect(self.StartCollect)
         self.ButtonDelete.clicked.connect(self.show_delete_window)
         self.ButtonSetting.clicked.connect(self.show_setting_window)
         self.AddFriendBtn.clicked.connect(self.startFriendAdd)
-
+        self.driver = None
     def StartCollect(self):
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
         try:
             print("StartCollect 함수 호출\n")
             print(self.KeyWordList)
             time.sleep(1)
             if self.KeyWord.text() != "":
                 self.KeyWordList= self.KeyWord.text()
-                self.KeyWordList = [self.KeyWordList]
                 #self.MacroCollect = NaverIdCollectClass(self.driver, self.KeyWordList, self.CollectStatus, self.Rest, int(self.Count.text()))
                 self.MacroCollect = NaverIdCollectClass(self.driver, self.KeyWordList,int(self.Count.text()))
 
                 # NaverIdCollectClass의 시그널과 연결
                 self.MacroCollect.update_status.connect(self.CollectStatus.append)
+                self.MacroCollect.finished_signal.connect(self.handle_finished2)
                 self.MacroCollect.update_rest.connect(lambda value: self.Rest.setText(value))
 
                 self.MacroCollect.start()
@@ -141,7 +147,11 @@ class SecondWindow(QMainWindow,QDialog,Parent):
         except Exception as e:
             print("SecondWindow->StartCollect 함수 에러: "+str(e))
             self.show_alert("개수를 입력해주세요.")
+    def handle_finished2(self, result):
+        self.driver.quit()
+
     def startFriendAdd(self):
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
         try:
             with open('user_data.txt', 'r', encoding='utf-8') as file:
                 lines = file.readlines()
@@ -156,26 +166,49 @@ class SecondWindow(QMainWindow,QDialog,Parent):
             NaverLoginReturn = NaverLogin.run()
             if NaverLoginReturn == 1:
                 #print(self.AutoMessage)
-                self.friend_thread = FriendAddClass(self.driver, self.MacroCollect.IdList, self.AutoMessage)
-                self.friend_thread.update_signal.connect(self.update_gui)
-                self.friend_thread.start()
+                try:
+                    with open(r'NaverIds.txt', 'r', encoding='utf-8') as file:
+                        ids = file.readlines()
+                    self.friend_thread = FriendAddClass(self.driver,ids, self.AutoMessage,self.GroupSelect.value())
+                    self.friend_thread.update_signal.connect(self.update_gui)
+                    self.friend_thread.finished_signal.connect(self.handle_finished)
+                    self.friend_thread.start()
+                except:
+                    self.show_alert("네이버 아이디를 먼저 수집해주세요.")
+
+                
         except Exception as e:
             print(f"예외가 발생했습니다: {e}")
             self.show_alert("네이버 아이디 정보가 없습니다.")
     def update_gui(self, message):
         self.CollectStatus2.append(message)
-
+    def handle_finished(self, result):
+        print("handle_finished 호출", result)
+        if result == 2:
+            with open('NaverIds.txt', 'w', encoding='utf-8') as file:
+                file.write('')
+            self.show_alert("서로이웃추가 종료\n더 요청을 보내려면 아이디를 추가로 수집하세요.")
+            self.driver.quit()
+        elif result == 1:
+            self.show_alert("오늘치 서로이웃 종료합니다.")
+            self.driver.quit()
+        elif result == 3:
+            self.show_alert("해당 그룹에는 더이상 이웃을 추가할 수 없습니다.")
+            self.driver.quit()
 
 #삭제창
-class ThirdWindow(QMainWindow,Parent):
+class ThirdWindow(QMainWindow,DeleteUi.Ui_MainWindow,Parent):
     def __init__(self):
         super(ThirdWindow,self).__init__()
         loadUi("DeleteUi.ui", self)
+        self.widget =  QStackedWidget()
+        #self.setWindowTitle("서로이웃 추가 자동화 봇 - 삭제창")
         self.ButtonAdd.clicked.connect(self.show_main_window)
         self.ButtonSetting.clicked.connect(self.show_setting_window)
         self.Delete.clicked.connect(self.Neighbor_delete)
-        
+        self.driver = None
     def Neighbor_delete(self):
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
         try:
             with open('user_data.txt', 'r') as file:
                 lines = file.readlines()
@@ -188,21 +221,39 @@ class ThirdWindow(QMainWindow,Parent):
             frienddeleteReturn = frienddelete.run()
             if frienddeleteReturn == 1:
                 self.show_alert("삭제 완료")
+                self.driver.quit()
         except:
             self.show_alert("네이버 아이디 정보가 없습니다.")
         
     
-class FirthdWindow(QMainWindow,Parent):
+class FirthdWindow(QMainWindow,Setting.Ui_MainWindow,Parent):
     def __init__(self):
         super(FirthdWindow,self).__init__()
         loadUi("Setting.ui", self)
         self.widget =  QStackedWidget()
+        #self.setWindowTitle("서로이웃 추가 자동화 봇 - 설정창")
         self.ButtonAdd.clicked.connect(self.show_main_window)
         self.ButtonDelete.clicked.connect(self.show_delete_window)
         self.LoginTest.clicked.connect(self.NaverLogTesting)
         self.SaveMessage.clicked.connect(self.save_message)
+        self.driver = None
+        try:
+            with open('user_data.txt', 'r') as file:
+                lines = file.readlines()
+                if lines:
+                    self.Id.setText(lines[0].strip())
+                    self.Pw.setText(lines[1].strip()) 
+        except:
+            pass
         
+        try:
+            with open('user_message.txt', 'r', encoding='utf-8') as file:
+                    self.Message.setText(file.read().strip())
+        except:
+            pass
+
     def NaverLogTesting(self):
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
         if self.Id.text() != "" and self.Pw.text() != "":
             NaverLogin = NaverLoginClass(self.driver,self.Id.text(), self.Pw.text())
             NaverLoginReturn = NaverLogin.run()
@@ -210,6 +261,7 @@ class FirthdWindow(QMainWindow,Parent):
                 with open('user_data.txt', 'w', encoding='utf-8') as file:
                     file.write(f"{self.Id.text()}\n{self.Pw.text()}\n")
                     self.show_alert("네이버 로그인 성공")
+                self.driver.quit()
             else:
                 self.show_alert("네이버 로그인 실패")
         else:
@@ -221,6 +273,7 @@ class FirthdWindow(QMainWindow,Parent):
 
  
 if __name__ == "__main__":
+    app = QApplication(sys.argv)
     myWindow = MyWindow()
     myWindow.setFixedHeight(486)
     myWindow.setFixedWidth(410)

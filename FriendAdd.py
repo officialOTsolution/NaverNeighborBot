@@ -7,22 +7,26 @@ from PyQt5.QtCore import *
 from PyQt5.QtCore import QThread, pyqtSignal
 
 import random
-
+import time
 class FriendAddClass(QThread):
     update_signal = pyqtSignal(str)  # Define a signal to send updates
-
-    def __init__(self, driver, IdList, message =""):
+    finished_signal = pyqtSignal(int) 
+    def __init__(self, driver, ids,message ="",groupselect = 0):
         super().__init__()
         self.driver = driver
-        self.IdList = IdList
         self.message = message
-
+        self.ids = ids
+        self.UsedIds = []
+        if groupselect == 0:
+            self.GroupSelect = random.randint(0, 30)
+        else:
+            self.GroupSelect = groupselect
+        
     def run(self):
-        processed_ids = []
         cnt = 1
-        random_number = random.randint(1, 13)
-        for id in self.IdList:
+        for id in self.ids:
             id = id.replace('\n', '')
+            self.UsedIds.append(id)
             url = f'https://m.blog.naver.com/BuddyAddForm.naver?blogId={id}&returnUrl=https%253A%252F%252Fm.blog.naver.com%252F{id}'
             try:
                 self.driver.get(url)
@@ -35,30 +39,47 @@ class FriendAddClass(QThread):
                 button.click()
                 self.driver.implicitly_wait(0.5)
 
-                for _ in range(random_number):
+                for _ in range(self.GroupSelect):
                     webdriver.ActionChains(self.driver).send_keys(Keys.ARROW_DOWN).perform()
 
                 self.driver.implicitly_wait(0.5)
                 message = self.driver.find_element(By.CSS_SELECTOR,
                                             '#buddyAddForm > fieldset > div > div.set_detail_t1 > div.set_detail_t1 > div > textarea')
                 message.clear()
+                name = self.driver.find_element(By.CSS_SELECTOR, '#buddyAddForm > fieldset > div > div.set_txt_t1 > p > strong > em').text
+                if "{사용자}" in self.message:
+                    self.message = self.message.replace("{사용자}", name)
                 message.send_keys(self.message)
+                self.message = self.message.replace(name, "{사용자}")
                 self.driver.implicitly_wait(0.5)
                 button = self.driver.find_element(By.CSS_SELECTOR, 'body > ui-view > div.head.type1 > a.btn_ok')
                 button.click()
                 self.driver.implicitly_wait(0.5)
-                self.update_signal.emit(f"보낸 서이 요청 수: {cnt}개")
-                
-                cnt += 1
-            # except WebDriverException:
-            #     self.driver = webdriver.Chrome(ChromeDriverManager().install())
-            #     self.run()
-            except:
                 try:
                     text = self.driver.find_element(By.CSS_SELECTOR, '#lyr6 > div > div.txt_area > p').text
-                    if text == '하루에 신청 가능한 이웃수가 초과되어 더이상 이웃을 추가할 수 없습니다.':
-                        print("오늘치 서로이웃 종료합니다.")
-                        self.driver.quit()
-                        break
+                    self.finished_signal.emit(3)
+                    return 
                 except:
+                    pass
+                self.update_signal.emit(f"보낸 서이 요청 수: {cnt}개")
+                cnt += 1
+            except:
+                try:
+                    print("text 검사 실행")
+                    try:
+                        text = self.driver.find_element(By.CSS_SELECTOR, '#lyr6 > div > div.txt_area > p').text
+                        if text == '하루에 신청 가능한 이웃수가 초과되어 더이상 이웃을 추가할 수 없습니다.':
+                            print("오늘치 서로이웃 종료합니다.")
+                            self.driver.quit()
+                            ids = [id for id in self.ids if id not in self.UsedIds]
+                            #서이요청 보낸 아이디 중복 제거
+                            with open(r'NaverIds.txt', 'w', encoding='utf-8') as file:
+                                for id in ids:
+                                    file.write(id)
+                            return 
+                    except:
+                        continue
+                except Exception as e:
+                    print("Error",e)  
                     continue
+        self.finished_signal.emit(2)

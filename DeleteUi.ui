@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>서로이웃 추가 자동화 봇 -삭제창</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: #f5f5f5;</string>
@@ -74,7 +74,7 @@ color : white;</string>
      <string notr="true">color:red;</string>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;더이상 서로이웃 요청을 보내기&lt;br/&gt; 어려울 때에만 사용하시는 것을 권장합니다.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;더이상 서로이웃 요청을 보내기&lt;br/&gt; 어려울 경우에 사용하시는 것을 권장합니다.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="ButtonAdd">

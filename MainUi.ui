@@ -29,7 +29,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>서이추 봇</string>
+   <string>서로이웃 추가 자동화 봇 -추가 창</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: #f5f5f5;</string>
@@ -189,7 +189,7 @@ padding : 0px 5px;</string>
     <rect>
      <x>50</x>
      <y>290</y>
-     <width>271</width>
+     <width>320</width>
      <height>16</height>
     </rect>
    </property>
@@ -210,7 +210,7 @@ padding : 0px 5px;</string>
 </string>
    </property>
    <property name="text">
-    <string>해당 개수만큼 아이디를 수집합니다.</string>
+    <string>해당 개수만큼의 아이디를 수집합니다.</string>
    </property>
   </widget>
   <widget class="QTextEdit" name="CollectStatus">
@@ -416,7 +416,7 @@ color : white;</string>
     </font>
    </property>
    <property name="text">
-    <string>중복 제거 후 남은 아이디 수 : </string>
+    <string>중복 제거 후 저장될 아이디 수 : </string>
    </property>
   </widget>
   <widget class="QLabel" name="Rest">
@@ -451,7 +451,7 @@ color : white;</string>
     <rect>
      <x>50</x>
      <y>170</y>
-     <width>241</width>
+     <width>300</width>
      <height>21</height>
     </rect>
    </property>
@@ -472,7 +472,7 @@ color : white;</string>
     <string notr="true">color: red;</string>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;키워드는 하나만 입력해주세요&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;키워드는 하나만 입력해주세요 Ex) 나이키&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_10">
@@ -524,9 +524,9 @@ padding : 0px 5px;</string>
   <widget class="QLabel" name="label_11">
    <property name="geometry">
     <rect>
-     <x>430</x>
-     <y>220</y>
-     <width>208</width>
+     <x>433</x>
+     <y>217</y>
+     <width>279</width>
      <height>16</height>
     </rect>
    </property>
@@ -543,7 +543,7 @@ padding : 0px 5px;</string>
 </string>
    </property>
    <property name="text">
-    <string>0번 선택시 랜덤으로 저장됨.</string>
+    <string>0번 선택 시 랜덤 그룹에 저장됨.</string>
    </property>
   </widget>
   <widget class="QPushButton" name="ButtonSetting">

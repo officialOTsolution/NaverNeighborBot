@@ -136,18 +136,23 @@ class Ui_Dialog(object):
 "border-radius: 5px;\n"
 "")
         self.InstaLInk.setObjectName("InstaLInk")
+        self.label = QtWidgets.QLabel(Dialog)
+        self.label.setGeometry(QtCore.QRect(52, 334, 151, 16))
+        self.label.setOpenExternalLinks(True)
+        self.label.setObjectName("label")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "서이추 봇"))
+        Dialog.setWindowTitle(_translate("Dialog", "서로이웃 추가 자동화 봇"))
         self.StartBtn.setText(_translate("Dialog", "로그인"))
         self.label_6.setText(_translate("Dialog", "아이디"))
         self.label_7.setText(_translate("Dialog", "비밀번호"))
         self.HowToUse.setText(_translate("Dialog", "사용 방법"))
         self.InstaLInk.setText(_translate("Dialog", "개발자 인스타"))
+        self.label.setText(_translate("Dialog", "아이디 비밀번호 찾기"))
 
 
 if __name__ == "__main__":

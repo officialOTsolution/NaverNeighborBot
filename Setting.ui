@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>서로이웃 추가 자동화 봇 - 설정창</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: #f5f5f5;</string>
@@ -215,10 +215,10 @@ color : white;</string>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>394</x>
-      <y>241</y>
+      <x>391</x>
+      <y>217</y>
       <width>288</width>
-      <height>53</height>
+      <height>107</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -238,7 +238,7 @@ color : white;</string>
 </string>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;서로이웃 요청과 함께 보내실 메세지를 &lt;br/&gt;작성하시면 됩니다&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;서로이웃 요청과 함께 보내실 메세지를 &lt;br&gt;작성하시면 됩니다&lt;br&gt;치환하는법) {사용자}님  -&gt; 000님&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_7">
@@ -310,8 +310,8 @@ color : white;</string>
    <widget class="QPushButton" name="SaveMessage">
     <property name="geometry">
      <rect>
-      <x>393</x>
-      <y>291</y>
+      <x>399</x>
+      <y>310</y>
       <width>281</width>
       <height>51</height>
      </rect>

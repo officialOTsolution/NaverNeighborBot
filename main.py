@@ -1,12 +1,7 @@
-from PyQt5 import uic
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QStackedWidget
-from PyQt5 import QtWidgets 
+from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QStackedWidget, QMessageBox
 from PyQt5.uic import loadUi
+from PyQt5.QtCore import pyqtSignal
 
-import webbrowser
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 
@@ -14,15 +9,20 @@ import time
 import sys
 import os
 
-import LoginUi2
-import MainUi
-import Setting
-import DeleteUi
-
+import webbrowser
 from FriendAdd import FriendAddClass
 from FriendDelete import FriendDeleteClass
 from NaverIDCollectfile import NaverIdCollectClass
 from NaverLogin import NaverLoginClass
+
+import LoginUi2
+import MainUi
+import Setting
+import Setting2
+import DeleteUi
+import Delete2
+
+
 
 """
 환경: python 3.9.16 my_proj:conda
@@ -33,13 +33,11 @@ def resource_path(relative_path):
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
-class Parent():
+class Parent(QDialog):
     def __init__(self):
+        super().__init__()
         self.widget =  QStackedWidget()
-        self.flag = False
-    def set_flag_true(self):
-        self.flag = True
-
+        
     def show_alert(self, text):
         alert = QMessageBox()
         alert.setWindowTitle("알림")
@@ -49,24 +47,24 @@ class Parent():
         alert.exec_()
 
     def show_setting_window(self):
-        #self.driver.quit()
         settingwindow = FirthdWindow()
+        settingwindow.setWindowTitle("서로이웃 추가 자동화 봇 - 설정창")
         settingwindow.setFixedSize(761,718)
         self.widget.addWidget(settingwindow)
         self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
         self.setCentralWidget(self.widget)
 
     def show_delete_window(self):
-        #self.driver.quit()
         thirdwindow = ThirdWindow()
+        thirdwindow.setWindowTitle("서로이웃 추가 자동화 봇 - 삭제창")
         thirdwindow.setFixedSize(761,718)
         self.widget.addWidget(thirdwindow)
         self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
         self.setCentralWidget(self.widget)
 
     def show_main_window(self):
-        #self.driver.quit()
         secondwindow = SecondWindow()
+        secondwindow.setWindowTitle("서로이웃 추가 자동화 봇 - 추가창")
         secondwindow.setFixedSize(761,718)
         self.widget.addWidget(secondwindow)
         self.widget.setCurrentIndex(self.widget.currentIndex() + 1)
@@ -79,11 +77,22 @@ class MyWindow(QMainWindow, LoginUi2.Ui_Dialog,Parent):
     def __init__(self):
         super().__init__()
         self.selen = None
-        self.widget =  QStackedWidget()
+        self.widget = QStackedWidget()
         self.setupUi(self)
         self.StartBtn.clicked.connect(self.resume)
         self.HowToUse.clicked.connect(self.manul_link)
         self.InstaLInk.clicked.connect(self.insta_link)
+        try:
+            with open('user_login.txt', 'r', encoding='utf-8') as file:
+                lines = file.readlines()
+                if lines:
+                    self.ID.setText(lines[0].strip()) 
+                    self.PW.setText(lines[1].strip())
+                    self.LoginFlag = False
+        except:
+            self.ID.setText("") 
+            self.PW.setText("") 
+
     def resume(self):
         LoginInfor = self.Login()
         if LoginInfor == 1:
@@ -91,7 +100,6 @@ class MyWindow(QMainWindow, LoginUi2.Ui_Dialog,Parent):
             self.hide()
             secondwindow = SecondWindow()
             secondwindow.setFixedSize(761,718)
-            self.widget.setFixedSize(761,718)
             self.widget.addWidget(secondwindow)
             self.widget.show()
 
@@ -99,6 +107,9 @@ class MyWindow(QMainWindow, LoginUi2.Ui_Dialog,Parent):
             self.show_alert('로그인 실패 \n아이디와 패스워드를 다시 입력해주세요.')
     def Login(self):
         if self.ID.text() == 'admin' and self.PW.text() == "1004":
+            if self.LoginFlag:
+                with open('user_login.txt', 'w', encoding='utf-8') as file:
+                        file.write(f"{self.ID.text()}\n{self.PW.text()}\n")
             return 1
         else:
             return 2
@@ -109,12 +120,12 @@ class MyWindow(QMainWindow, LoginUi2.Ui_Dialog,Parent):
         url = r"https://cafe.naver.com/onetouchsolution" 
         webbrowser.open(url)
 
-class SecondWindow(QMainWindow,MainUi.Ui_Dialog,QDialog,Parent):
+class SecondWindow(QMainWindow,MainUi.Ui_Dialog,Parent):
     def __init__(self):
         super(SecondWindow, self).__init__()
+        #super(MainUi.Ui_Dialog,self).__init__()
+        #super().__init__()
         loadUi("MainUi.ui",self)
-
-        #self.setWindowTitle("서로이웃 추가 자동화 봇 - 추가창")
         self.MacroCollect = None
         self.widget = QStackedWidget()
         self.KeyWordList= self.KeyWord.text()
@@ -131,7 +142,6 @@ class SecondWindow(QMainWindow,MainUi.Ui_Dialog,QDialog,Parent):
             time.sleep(1)
             if self.KeyWord.text() != "":
                 self.KeyWordList= self.KeyWord.text()
-                #self.MacroCollect = NaverIdCollectClass(self.driver, self.KeyWordList, self.CollectStatus, self.Rest, int(self.Count.text()))
                 self.MacroCollect = NaverIdCollectClass(self.driver, self.KeyWordList,int(self.Count.text()))
 
                 # NaverIdCollectClass의 시그널과 연결
@@ -197,12 +207,12 @@ class SecondWindow(QMainWindow,MainUi.Ui_Dialog,QDialog,Parent):
             self.driver.quit()
 
 #삭제창
-class ThirdWindow(QMainWindow,DeleteUi.Ui_MainWindow,Parent):
+class ThirdWindow(QMainWindow,Delete2.Ui_Dialog,Parent):
     def __init__(self):
-        super(ThirdWindow,self).__init__()
-        loadUi("DeleteUi.ui", self)
+        #super(ThirdWindow,self).__init__()
+        super().__init__()
+        loadUi("Delete2.ui", self)
         self.widget =  QStackedWidget()
-        #self.setWindowTitle("서로이웃 추가 자동화 봇 - 삭제창")
         self.ButtonAdd.clicked.connect(self.show_main_window)
         self.ButtonSetting.clicked.connect(self.show_setting_window)
         self.Delete.clicked.connect(self.Neighbor_delete)
@@ -226,12 +236,12 @@ class ThirdWindow(QMainWindow,DeleteUi.Ui_MainWindow,Parent):
             self.show_alert("네이버 아이디 정보가 없습니다.")
         
     
-class FirthdWindow(QMainWindow,Setting.Ui_MainWindow,Parent):
+class FirthdWindow(QMainWindow,Setting2.Ui_Dialog,Parent):
     def __init__(self):
-        super(FirthdWindow,self).__init__()
-        loadUi("Setting.ui", self)
+        #super(FirthdWindow,self).__init__()
+        super().__init__()
+        loadUi("Setting2.ui", self)
         self.widget =  QStackedWidget()
-        #self.setWindowTitle("서로이웃 추가 자동화 봇 - 설정창")
         self.ButtonAdd.clicked.connect(self.show_main_window)
         self.ButtonDelete.clicked.connect(self.show_delete_window)
         self.LoginTest.clicked.connect(self.NaverLogTesting)
@@ -251,6 +261,7 @@ class FirthdWindow(QMainWindow,Setting.Ui_MainWindow,Parent):
                     self.Message.setText(file.read().strip())
         except:
             pass
+
 
     def NaverLogTesting(self):
         self.driver = webdriver.Chrome(ChromeDriverManager().install())
@@ -278,7 +289,6 @@ if __name__ == "__main__":
     myWindow.setFixedHeight(486)
     myWindow.setFixedWidth(410)
     myWindow.show()
-
     sys.exit(app.exec_())
 
 # python -m PyQt5.uic.pyuic -x LoginUi.ui -o Ui.py

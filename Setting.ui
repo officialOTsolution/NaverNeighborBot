@@ -6,12 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>735</width>
+    <width>770</width>
     <height>404</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>서로이웃 추가 자동화 봇 - 설정창</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>logo/KakaoTalk_20231229_172139171.png</normaloff>logo/KakaoTalk_20231229_172139171.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: #f5f5f5;</string>
@@ -21,7 +25,7 @@
     <property name="geometry">
      <rect>
       <x>46</x>
-      <y>92</y>
+      <y>100</y>
       <width>281</width>
       <height>51</height>
      </rect>
@@ -141,10 +145,10 @@ padding : 5px;</string>
    <widget class="QLineEdit" name="Message">
     <property name="geometry">
      <rect>
-      <x>386</x>
-      <y>78</y>
-      <width>305</width>
-      <height>161</height>
+      <x>387</x>
+      <y>113</y>
+      <width>301</width>
+      <height>162</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -212,40 +216,11 @@ color : white;</string>
      <string>로그인 테스트</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>391</x>
-      <y>217</y>
-      <width>288</width>
-      <height>107</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Spoqa Han Sans Neo</family>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: #a7a7a7;
-</string>
-    </property>
-    <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;서로이웃 요청과 함께 보내실 메세지를 &lt;br&gt;작성하시면 됩니다&lt;br&gt;치환하는법) {사용자}님  -&gt; 000님&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>54</y>
+      <y>60</y>
       <width>175</width>
       <height>27</height>
      </rect>
@@ -310,9 +285,9 @@ color : white;</string>
    <widget class="QPushButton" name="SaveMessage">
     <property name="geometry">
      <rect>
-      <x>399</x>
-      <y>310</y>
-      <width>281</width>
+      <x>389</x>
+      <y>290</y>
+      <width>301</width>
       <height>51</height>
      </rect>
     </property>
@@ -339,8 +314,39 @@ color : white;</string>
      <string>저장</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>396</x>
+      <y>84</y>
+      <width>299</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <family>Spoqa Han Sans Neo</family>
+      <pointsize>9</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: #a7a7a7;
+</string>
+    </property>
+    <property name="text">
+     <string>치환 방법) {사용자}님  -&gt; 00님</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <resources/>
  <connections/>

@@ -29,7 +29,11 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>서로이웃 추가 자동화 봇 -추가 창</string>
+   <string>서로이웃 추가 자동화 봇 - 추가창</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>logo/KakaoTalk_20231229_172139171_01.png</normaloff>logo/KakaoTalk_20231229_172139171_01.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: #f5f5f5;</string>

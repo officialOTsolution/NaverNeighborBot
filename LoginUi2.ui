@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>410</width>
-    <height>486</height>
+    <width>402</width>
+    <height>509</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,6 +26,10 @@
   <property name="windowTitle">
    <string>서로이웃 추가 자동화 봇</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>logo/KakaoTalk_20231229_172139171.png</normaloff>logo/KakaoTalk_20231229_172139171.png</iconset>
+  </property>
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
@@ -39,8 +43,8 @@ border-radius: 100px;</string>
   <widget class="QPushButton" name="StartBtn">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>280</y>
+     <x>48</x>
+     <y>313</y>
      <width>311</width>
      <height>51</height>
     </rect>
@@ -188,8 +192,8 @@ padding : 0px 5px;</string>
   <widget class="QPushButton" name="HowToUse">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>350</y>
+     <x>208</x>
+     <y>383</y>
      <width>151</width>
      <height>51</height>
     </rect>
@@ -218,8 +222,8 @@ border-radius: 5px;</string>
   <widget class="QPushButton" name="InstaLInk">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>350</y>
+     <x>48</x>
+     <y>383</y>
      <width>141</width>
      <height>51</height>
     </rect>
@@ -249,14 +253,24 @@ border-radius: 5px;
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>52</x>
-     <y>334</y>
-     <width>151</width>
-     <height>16</height>
+     <x>51</x>
+     <y>264</y>
+     <width>331</width>
+     <height>28</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Spoqa Han Sans Neo</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #a7a7a7;
+</string>
+   </property>
    <property name="text">
-    <string>아이디 비밀번호 찾기</string>
+    <string>&lt;a href=&quot;https://www.naver.com/&quot;&gt; 아이디 혹은 비밀번호를 잊으셨나요?&lt;/a&gt;</string>
    </property>
    <property name="openExternalLinks">
     <bool>true</bool>

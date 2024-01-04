@@ -81,7 +81,6 @@ class FriendAddClass(QThread):
                 cnt += 1
             except:
                 try:
-                    print("text 검사 실행")
                     try:
                         text = self.driver.find_element(By.CSS_SELECTOR, '#lyr6 > div > div.txt_area > p').text
                         if text == '하루에 신청 가능한 이웃수가 초과되어 더이상 이웃을 추가할 수 없습니다.':
@@ -92,6 +91,7 @@ class FriendAddClass(QThread):
                             with open(resource_path('NaverIds.txt'), 'w', encoding='utf-8') as file:
                                 for id in ids:
                                     file.write(id)
+                            self.finished_signal.emit(1)
                             return 
                     except:
                         continue

@@ -86,9 +86,7 @@ class MyWindow(QMainWindow,Parent):
                 if lines:
                     self.ID.setText(lines[0].strip()) 
                     self.PW.setText(lines[1].strip())
-                    self.LoginFlag = False
         except:
-            self.LoginFlag = True
             self.ID.setText("") 
             self.PW.setText("") 
 
@@ -104,33 +102,27 @@ class MyWindow(QMainWindow,Parent):
         else:
             self.show_alert('로그인 실패 \n아이디와 패스워드를 다시 입력해주세요.')
     def Login(self):
-        if self.ID.text() == 'admin' and self.PW.text() == "1004":
-            if self.LoginFlag:
-                with open(resource_path('user_login.txt'), 'w', encoding='utf-8') as file:
-                        file.write(f"{self.ID.text()}\n{self.PW.text()}\n")
-            return 1
-        elif self.ID.text() == '1q2w3e34r' and self.PW.text() == "1q2w3e4r!!":
-            if self.LoginFlag:
-                with open(resource_path('user_login.txt'), 'w', encoding='utf-8') as file:
-                        file.write(f"{self.ID.text()}\n{self.PW.text()}\n")
-            return 1
-        elif self.ID.text() == 'silpo' and self.PW.text() == "silpo591228":
-            if self.LoginFlag:
-                with open(resource_path('user_login.txt'), 'w', encoding='utf-8') as file:
-                        file.write(f"{self.ID.text()}\n{self.PW.text()}\n")
-            return 1
-        elif self.ID.text() == 'msukimsp' and self.PW.text() == "677899sp":
-            if self.LoginFlag:
-                with open(resource_path('user_login.txt'), 'w', encoding='utf-8') as file:
-                        file.write(f"{self.ID.text()}\n{self.PW.text()}\n")
+        user_credentials = {
+            'admin': '1004',
+            '1q2w3e34r': '1q2w3e4r!!',
+            'silpo': 'silpo591228',
+            'msukimsp': '677899sp',
+        }
+
+        entered_id = self.ID.text()
+        entered_pw = self.PW.text()
+
+        if entered_id in user_credentials and entered_pw == user_credentials[entered_id]:
+            with open(resource_path('user_login.txt'), 'w', encoding='utf-8') as file:
+                file.write(f"{entered_id}\n{entered_pw}\n")
             return 1
         else:
             return 2
     def insta_link(self):
-        url = r"https://www.instagram.com/onetouch_sol/" 
+        url = r"https://www.instagram.com/official_otsolution/" 
         webbrowser.open(url)
     def manul_link(self):
-        url = r"https://cafe.naver.com/onetouchsolution" 
+        url = r"https://cafe.naver.com/onetouchsolution/2" 
         webbrowser.open(url)
 
 class SecondWindow(QMainWindow,Parent):
@@ -175,8 +167,6 @@ class SecondWindow(QMainWindow,Parent):
 
     def startFriendAdd(self):
         self.driver = webdriver.Chrome()
-
-#        self.driver = webdriver.Chrome(ChromeDriverManager().install())
         try:
             with open(resource_path('user_data.txt'), 'r', encoding='utf-8') as file:
                 lines = file.readlines()
@@ -238,8 +228,6 @@ class ThirdWindow(QMainWindow,Parent):
 
     def Neighbor_delete(self):
         self.driver = webdriver.Chrome()
-
-#        self.driver = webdriver.Chrome(ChromeDriverManager().install())
         try:
             with open(resource_path('user_data.txt'), 'r') as file:
                 lines = file.readlines()
@@ -288,8 +276,6 @@ class FirthdWindow(QMainWindow,Parent):
 
     def NaverLogTesting(self):
         self.driver = webdriver.Chrome()
-
-      #  self.driver = webdriver.Chrome(ChromeDriverManager().install())
         if self.Id.text() != "" and self.Pw.text() != "":
             NaverLogin = NaverLoginClass(self.driver,self.Id.text(), self.Pw.text())
             NaverLoginReturn = NaverLogin.run()
@@ -322,3 +308,6 @@ if __name__ == "__main__":
 # python -m PyInstaller --onefile --noconsole main.py
 # python -m PyInstaller --icon=logo/KakaoTalk_20231229_172139171.png --onefile main.py
 # python -m pyinstaller --onefile --add-data "path/to/other_script.py;." main_script.py
+"""
+pyinstaller --add-data "LoginUi.ui;." --add-data "MainUi.ui;." --add-data "DeleteUi.ui;." --add-data "Setting.ui;." --add-data "SpoqaHanSansNeo_all/SpoqaHanSansNeo_OTF_original/*.otf;SpoqaHanSansNeo_OTF_original" --add-data "logo/*png;logo" --icon=logo/Last.png main.py
+"""

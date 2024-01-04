@@ -28,7 +28,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>logo/KakaoTalk_20231229_172139171.png</normaloff>logo/KakaoTalk_20231229_172139171.png</iconset>
+    <normaloff>logo/Last.png</normaloff>logo/Last.png</iconset>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -270,7 +270,7 @@ border-radius: 5px;
 </string>
    </property>
    <property name="text">
-    <string>&lt;a href=&quot;https://www.naver.com/&quot;&gt; 아이디 혹은 비밀번호를 잊으셨나요?&lt;/a&gt;</string>
+    <string>&lt;a href=&quot;http://pf.kakao.com/_DSxewG/chat&quot;&gt; 아이디 혹은 비밀번호를 잊으셨나요?&lt;/a&gt;</string>
    </property>
    <property name="openExternalLinks">
     <bool>true</bool>

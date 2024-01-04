@@ -10,6 +10,12 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+import sys
+import os
+
+def resource_path(relative_path):
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -26,7 +32,7 @@ class Ui_Dialog(object):
         font.setWeight(50)
         Dialog.setFont(font)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("logo/KakaoTalk_20231229_172139171.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(resource_path("logo/Last.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
         Dialog.setAutoFillBackground(False)
         Dialog.setStyleSheet("background-color: rgb(255,255,255);\n"
@@ -161,7 +167,7 @@ class Ui_Dialog(object):
         self.label_7.setText(_translate("Dialog", "비밀번호"))
         self.HowToUse.setText(_translate("Dialog", "사용 방법"))
         self.InstaLInk.setText(_translate("Dialog", "개발자 인스타"))
-        self.label.setText(_translate("Dialog", "<a href=\"https://www.naver.com/\"> 아이디 혹은 비밀번호를 잊으셨나요?</a>"))
+        self.label.setText(_translate("Dialog", "<a href=\"http://pf.kakao.com/_DSxewG/chat\"> 아이디 혹은 비밀번호를 잊으셨나요?</a>"))
 
 
 if __name__ == "__main__":

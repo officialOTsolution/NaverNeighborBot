@@ -1,6 +1,13 @@
 from PyQt5.QtCore import QThread, QTimer, pyqtSignal
 from selenium.webdriver.common.by import By
 from selenium import webdriver
+import os
+import sys
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 class NaverIdCollectClass(QThread):
     # 스레드 간 통신을 위한 시그널 정의
@@ -18,6 +25,7 @@ class NaverIdCollectClass(QThread):
     def run(self):
         try:
             print("NaverIdCollectClass->run 호출")
+            
             # if not self.running:  # 일시 중지 중이면 실행하지 않음
             #     return
 
@@ -45,7 +53,7 @@ class NaverIdCollectClass(QThread):
             # 중복 제거
             self.IdList = list(set(self.IdList))
             cnt = 0
-            with open('NaverIds.txt', 'a', encoding='utf-8') as file:
+            with open(resource_path('NaverIds.txt'), 'a', encoding='utf-8') as file:
                 for id_item in self.IdList:
                     if not "http" in id_item:
                         cnt += 1

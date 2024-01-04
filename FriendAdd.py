@@ -8,6 +8,14 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 import random
 import time
+import sys
+import os
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
 class FriendAddClass(QThread):
     update_signal = pyqtSignal(str)  # Define a signal to send updates
     finished_signal = pyqtSignal(int) 
@@ -18,13 +26,18 @@ class FriendAddClass(QThread):
         self.ids = ids
         self.UsedIds = []
         if groupselect == 0:
-            self.GroupSelect = random.randint(0, 30)
+            self.GroupSelect = random.randint(0,25)
+            self.flag = False
         else:
+            self.flag = True
             self.GroupSelect = groupselect
         
     def run(self):
         cnt = 1
         for id in self.ids:
+            if not self.flag:
+                self.GroupSelect = random.randint(0,25)
+
             id = id.replace('\n', '')
             self.UsedIds.append(id)
             url = f'https://m.blog.naver.com/BuddyAddForm.naver?blogId={id}&returnUrl=https%253A%252F%252Fm.blog.naver.com%252F{id}'
@@ -57,8 +70,11 @@ class FriendAddClass(QThread):
                 self.driver.implicitly_wait(0.5)
                 try:
                     text = self.driver.find_element(By.CSS_SELECTOR, '#lyr6 > div > div.txt_area > p').text
-                    self.finished_signal.emit(3)
-                    return 
+                    if text == "선택 그룹의 이웃수가 초과되어 이웃을 추가할 수 없습니다 다른 그룹을 선택해주세요" and self.flag == True:
+                        self.finished_signal.emit(3)
+                        return 
+                    else:
+                        continue
                 except:
                     pass
                 self.update_signal.emit(f"보낸 서이 요청 수: {cnt}개")
@@ -73,7 +89,7 @@ class FriendAddClass(QThread):
                             self.driver.quit()
                             ids = [id for id in self.ids if id not in self.UsedIds]
                             #서이요청 보낸 아이디 중복 제거
-                            with open(r'NaverIds.txt', 'w', encoding='utf-8') as file:
+                            with open(resource_path('NaverIds.txt'), 'w', encoding='utf-8') as file:
                                 for id in ids:
                                     file.write(id)
                             return 

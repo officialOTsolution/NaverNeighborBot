@@ -10,13 +10,18 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+import os 
+import sys 
+def resource_path(relative_path):
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(360, 259)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("logo/KakaoTalk_20231229_172139171_01.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(resource_path("logo/KakaoTalk_20231229_172139171_01.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet("background-color: #f5f5f5;")
         self.centralwidget = QtWidgets.QWidget(MainWindow)

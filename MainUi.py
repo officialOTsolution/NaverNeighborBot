@@ -10,6 +10,12 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+import sys
+import os
+
+def resource_path(relative_path):
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -26,7 +32,7 @@ class Ui_Dialog(object):
         font.setWeight(50)
         Dialog.setFont(font)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("logo/KakaoTalk_20231229_172139171_01.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(resource_path("logo/KakaoTalk_20231229_172139171_01.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
         Dialog.setStyleSheet("background-color: #f5f5f5;")
         self.label = QtWidgets.QLabel(Dialog)
@@ -294,7 +300,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "서로이웃 추가 자동화 봇 -추가 창"))
+        Dialog.setWindowTitle(_translate("Dialog", "서로이웃 추가 자동화 봇 - 추가창"))
         self.label.setText(_translate("Dialog", "해당 키워드로 아이디를 수집합니다."))
         self.label_2.setText(_translate("Dialog", "키워드"))
         self.label_3.setText(_translate("Dialog", "개수"))

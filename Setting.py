@@ -10,13 +10,18 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+import sys
+import os
 
+def resource_path(relative_path):
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(739, 404)
+        MainWindow.resize(763, 404)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("logo/KakaoTalk_20231229_172139171.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(resource_path("logo/KakaoTalk_20231229_172139171.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet("background-color: #f5f5f5;")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -181,9 +186,9 @@ class Ui_MainWindow(object):
 "")
         self.label_8.setObjectName("label_8")
         MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        self.statusBar = QtWidgets.QStatusBar(MainWindow)
+        self.statusBar.setObjectName("statusBar")
+        MainWindow.setStatusBar(self.statusBar)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)

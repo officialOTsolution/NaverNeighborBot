@@ -13,7 +13,7 @@ import random
 from webdriver_manager.chrome import ChromeDriverManager
 
 class FriendDeleteClass(QThread):
-
+    finished_signal = pyqtSignal(int) 
     def __init__(self, driver,id, pw):
         super().__init__()
         self.driver = driver
@@ -60,7 +60,7 @@ class FriendDeleteClass(QThread):
             alert_text = alert.text
             if alert_text == '신청취소할 사람을 먼저 선택해주세요.':
                 print("모든 요청 삭제 완료.")
-                return 1
+                self.finished_signal.emit(1)
             print("Alert 내용:", alert_text)
             alert.accept()
             self.driver.implicitly_wait(3)

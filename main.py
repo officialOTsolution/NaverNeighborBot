@@ -107,6 +107,8 @@ class MyWindow(QMainWindow,Parent):
             '1q2w3e34r': '1q2w3e4r!!',
             'silpo': 'silpo591228',
             'msukimsp': '677899sp',
+            'kim6559' : '3927',
+            'sun1358' : '1358'
         }
 
         entered_id = self.ID.text()
@@ -309,5 +311,5 @@ if __name__ == "__main__":
 # python -m PyInstaller --icon=logo/KakaoTalk_20231229_172139171.png --onefile main.py
 # python -m pyinstaller --onefile --add-data "path/to/other_script.py;." main_script.py
 """
-pyinstaller --add-data "LoginUi.ui;." --add-data "MainUi.ui;." --add-data "DeleteUi.ui;." --add-data "Setting.ui;." --add-data "SpoqaHanSansNeo_all/SpoqaHanSansNeo_OTF_original/*.otf;SpoqaHanSansNeo_OTF_original" --add-data "logo/*png;logo" --icon=logo/Last.png main.py
+pyinstaller --add-data "LoginUi2.ui;." --add-data "MainUi.ui;." --add-data "DeleteUi.ui;." --add-data "Setting.ui;." --add-data "SpoqaHanSansNeo_all/SpoqaHanSansNeo_OTF_original/*.otf;SpoqaHanSansNeo_OTF_original" --add-data "logo/*png;logo" --icon=logo/Last.png main.py
 """

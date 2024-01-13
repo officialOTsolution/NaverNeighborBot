@@ -247,7 +247,7 @@ border-radius: 5px;
 </string>
    </property>
    <property name="text">
-    <string>개발자 인스타</string>
+    <string>회원 가입</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">

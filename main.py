@@ -8,6 +8,8 @@ from selenium import webdriver
 import time
 import sys
 import os
+from pymongo import MongoClient
+import datetime
 
 import webbrowser
 from FriendAdd import FriendAddClass
@@ -69,8 +71,8 @@ class Parent(QDialog):
         self.setCentralWidget(self.widget)
 
 class MyWindow(QMainWindow,Parent):
-    progress_start = pyqtSignal(int)
-    progress_finish = pyqtSignal()
+    #progress_start = pyqtSignal(int)
+    #progress_finish = pyqtSignal()
     def __init__(self):
         super(MyWindow, self).__init__()
         loadUi(resource_path("LoginUi2.ui"),self)
@@ -86,9 +88,11 @@ class MyWindow(QMainWindow,Parent):
                 if lines:
                     self.ID.setText(lines[0].strip()) 
                     self.PW.setText(lines[1].strip())
+                self.flag = True
         except:
             self.ID.setText("") 
             self.PW.setText("") 
+            self.flag = False
 
     def resume(self):
         LoginInfor = self.Login()
@@ -102,23 +106,24 @@ class MyWindow(QMainWindow,Parent):
         else:
             self.show_alert('로그인 실패 \n아이디와 패스워드를 다시 입력해주세요.')
     def Login(self):
-        user_credentials = {
-            'admin': '1004',
-            '1q2w3e34r': '1q2w3e4r!!',
-            'silpo': 'silpo591228',
-            'msukimsp': '677899sp',
-            'kim6559' : '3927',
-            'sun1358' : '1358'
-        }
-
         entered_id = self.ID.text()
         entered_pw = self.PW.text()
+        
+        mongo_client = MongoClient("mongodb+srv://gimjeongheon38:1004@cluster0.8vxj3uo.mongodb.net/?retryWrites=true&w=majority")
+        db = mongo_client["Client"]  
+        user_collection = db['User_Datas']
 
-        if entered_id in user_credentials and entered_pw == user_credentials[entered_id]:
-            with open(resource_path('user_login.txt'), 'w', encoding='utf-8') as file:
-                file.write(f"{entered_id}\n{entered_pw}\n")
-            return 1
-        else:
+        try:
+            user_info = user_collection.find_one({"ID": entered_id})
+            print(user_info)
+            if user_info["password"] == entered_pw:
+                if not self.flag:
+                    with open(resource_path('user_login.txt'), 'w', encoding='utf-8') as file:
+                        file.write(f"{entered_id}\n{entered_pw}\n")
+                return 1
+            else:
+                return 2
+        except:
             return 2
     def insta_link(self):
         url = r"https://www.instagram.com/official_otsolution/" 
@@ -251,6 +256,7 @@ class ThirdWindow(QMainWindow,Parent):
             self.show_alert("삭제 완료")
             self.driver.quit()    
     
+#설정창
 class FirthdWindow(QMainWindow,Parent):
     def __init__(self):
         super(FirthdWindow,self).__init__()
@@ -275,7 +281,19 @@ class FirthdWindow(QMainWindow,Parent):
                     self.Message.setText(file.read().strip())
         except:
             pass
-
+        mongo_client = MongoClient("mongodb+srv://gimjeongheon38:1004@cluster0.8vxj3uo.mongodb.net/?retryWrites=true&w=majority")
+        db = mongo_client["Client"]  
+        user_collection = db['User_Datas']
+        with open(resource_path('user_login.txt'), 'r', encoding='utf-8') as file:
+                lines = file.readlines()
+                if lines:
+                    ID = lines[0].strip()
+        found_item  = user_collection.find_one({"ID": ID})
+        found_time  = found_item.get('time',None)
+        current_time = datetime.datetime.now() 
+        time_difference = found_time - current_time
+        print(time_difference.days)
+        self.Time.setText(f"{str(time_difference.days)}일")
     def NaverLogTesting(self):
         self.driver = webdriver.Chrome()
         if self.Id.text() != "" and self.Pw.text() != "":
